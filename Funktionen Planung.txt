@@ -1,0 +1,57 @@
+Funktionen:
+1.	Login
+	o	Daten vom Server überprüfen (mySql)  Rollen checken  entsprechendes anzeigen
+2.	Menü
+	o	Überprüfen der Rollen
+	o	Logout
+	o	Anzeige des vorhandenen Geldes in der Kasse
+3.	Weiterleitung zu einzelnen Menüpunkten
+	•	Lagerbestand
+		o	anzeigen (tabellarisch: was fehlt? / was ist da?)
+		o	Neues Produkt hinzufügen
+		o	Produkt löschen
+		o	Produkt bearbeiten (gelagerte Anzahl, Name, Preis)
+		o	Anzeige des vorhandenen Geldes in der Kasse
+		o	Produkt auf Bestellliste hinzufügen
+		o	automatische Nachbestellliste
+				Verknüpfung mit E-Mail?
+	•	Statistiken
+		o	für jeden Benutzer
+				Wer macht wie viel Umsatz
+		o	Umsatz
+		o	???
+	•	Benutzersystem
+		o	Superadmin (nur direkt ins System vorhinein)
+		o	Benutzer anlegen (nur Admin)
+				Rollen zuweisen
+		o	Benutzer löschen (nur Admin)
+	•	Kaufsystem
+		o	Produktliste (inkl. Name, Preis, sonstiges)
+		o	Produkt in Warenkorb hinzufügen
+		o	Anzeige des vorhandenen Geldes in der Kasse
+		o	Warenkorb
+				Anzeige der gewählten Waren
+				Waren wieder daraus entfernen
+				Summe anzeigen
+				Warenkorb verkaufen
+	•	Bezahlung: 	
+		o	Eingabe von gegebenem Geldbetrag
+		o	Ausrechnen des Rückgeldes
+		o	Bezahlung-abschließen-Button
+	•	Einstellungen? (wenn ja, was)
+	•	Easter-Eggs
+	•	sonstiges
+		o	automatischer Logout?
+				do not Login speichern
+		o	Log
+				wer angemeldet?
+				was wird gemacht? (z.B. Transaktionen)
+		o	Kassensystem
+				Geld rein
+				Geld raus
+		o	Meldung, falls Bestellung nötig
+		o	Problemmeldungen
+				welche?
+		o	Messen, ob der Tab mit dem Programm verlassen wird, wie lange
+				wie?
+		o	Zugriff nur aus der Schule nur beim PC im Café
