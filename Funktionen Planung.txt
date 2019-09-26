@@ -1,3 +1,5 @@
+26.09.19
+
 Funktionen:
 1.	Login
 	o	Daten vom Server überprüfen (mySql)  Rollen checken  entsprechendes anzeigen
@@ -34,7 +36,7 @@ Funktionen:
 				Waren wieder daraus entfernen
 				Summe anzeigen
 				Warenkorb verkaufen
-	•	Bezahlung: 	
+	•	Bezahlung:
 		o	Eingabe von gegebenem Geldbetrag
 		o	Ausrechnen des Rückgeldes
 		o	Bezahlung-abschließen-Button
