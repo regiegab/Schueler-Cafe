@@ -9,6 +9,10 @@ Datenbanksicherheit - SQL-Injektion
 Programmieren:
   jQuery!!!
   User in eigene Klasse
+  Transaktionsklasse
+    Speichern
+    Löschen
+    etc.
   Regelung der Anmeldung (Sessions) --> 21.10
 
 
