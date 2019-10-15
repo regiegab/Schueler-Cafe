@@ -1,0 +1,27 @@
+ToDo-New:
+SMV-Mitgleider fragen
+Kasse
+
+Zugangssicherheit im Hintergrund überprüfen
+Datenbanksicherheit - SQL-Injektion
+
+
+Programmieren:
+  jQuery!!!
+  User in eigene Klasse
+  Transaktionsklasse
+    Speichern
+    Löschen
+    etc.
+  Regelung der Anmeldung (Sessions) --> 21.10
+
+
+Vorstrukturieren:
+  Datenbank strukturieren           --> 21.10
+  MCV                               --> 21.10
+    Index (Inkludieren der Klassen, 1. Control aufrufen)
+    Model
+    View
+    Control (Eingabehandling (Klicks auf alles, Anmeldung))
+    --> Anleitungen im Internet?
+  Beispieltamplates                 --> 21.10
