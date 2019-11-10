@@ -1,8 +1,9 @@
 <?php
 class View{
+var $data;
 
-public function display($template){
-
+public function display($template, $data){
+  $this->data = $data;
   if(@include("Templates/".$template)){
 
   }else{
