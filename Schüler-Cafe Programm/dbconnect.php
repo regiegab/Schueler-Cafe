@@ -1,6 +1,6 @@
 <?php
 class Connect {
-  public function __construct__{}{
+  public function __construct{}{
   }
 
 $db = mysqli_connect("localhost", "Benutzername", "Passwort", "Datenbankname");
