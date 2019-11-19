@@ -4,7 +4,7 @@ var $data;
 
 public function display($template, $data){
   $this->data = $data;
-  if(@include($template)){
+  if(@include("Templates/".$template)){
 
   }else{
     echo "<br><br>invalid template!!!";

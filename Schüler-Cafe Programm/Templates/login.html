@@ -3,16 +3,83 @@
   <head>
     <meta charset="utf-8">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="Style/loginStyle.css">
+    <!-- <link rel="stylesheet" type="text/css" href="Style/loginStyle.css"> -->
+    <style>
+      body{
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background: #cceeff;
+      }
+      h1{
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 40px;
+        color: black;
+      }
+
+      .box{
+        width: 300px;
+        padding: 40px;
+        position: absolute;
+        top: 	50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        background: #a1c3f7;
+        text-align: center;
+        border: 5px solid black;
+        border-radius: 4%;
+
+
+      }
+
+      .box input[type = "text"], .box input[type = "password"]{
+        border: 0;
+        background: none;
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        border: 4px solid black;
+        padding: 14px 10px;
+        width: 200px;
+        outline: none;
+        color: black;
+        border-radius: 24px;
+        transition: 300ms;
+
+      }
+      .box input[type = "text"]:focus, .box input[type = "password"]:focus{
+        width: 230px;
+        border-color: green;
+
+      }
+
+      .box input[type = "submit"]{
+        background: none;
+        text-align: center;
+        border: 4px solid green;
+        outline: none;
+        border-radius: 24px;
+        padding: 14px 10px;
+        width: 130px;
+        transition: 400ms;
+
+      }
+
+      .box input[type = "submit"]:hover{
+        background-color: green;
+      }
+
+    </style>
   </head>
   <body>
 
-<form class="box" action="index.html" method="post">
+<form class="box" action="index.php?action=doLogin" method="post">
   <h1>Login</h1>
   <input type="text" name="" placeholder="Name">
   <input type="password" name="" placeholder="Passwort">
   <input type="submit" name="" value="Login">
-  
+
 </form>
 
   </body>
