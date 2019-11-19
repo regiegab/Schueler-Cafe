@@ -59,15 +59,38 @@ public function handleInput($input){
         // $this->viewData['products'] = array("p1" => "Kaffee", "p2"=>"Muffin" );//$this->model->getAllProducts();
         // break;
       case "doLogin":
-        echo "test_doLogin";
         //check data with SQLiteDatabase
+        if(false){ // if data is correct | was kommt in die Klammer beim if?
+          // go to main menu
+          // $template = "Templates/main.html";
+        }else{
+          // go back to Login
+          echo "info_incorrect_username_or_password";
+          $template = "Templates/login.html";
+        } // end else
+      break;
+      case "doLogout":
+        // Logout
+      break;
 
-        // go to main menu
-        // $template = "Templates/main.html";
-        $template = "Templates/login.html";
+
+      case "open_sale":
+        include("scripts/control/sale.php");
+      break;
+      case "open_magazine":
+        include("scripts/control/magazine.php");
+      break;
+      case "open_userInterface":
+        include("scripts/control/userInterface.php");
+      break;
+      case "open_settings":
+        include("scripts/control/settings.php");
+      break;
+      case "open_logs":
+        include("scripts/control/logs.php");
       break;
       default:
-        
+
         $template = "Templates/login.html";
 
     } //end switch
@@ -87,16 +110,16 @@ public function handleInput($input){
 
 /**
  * function to debug database connection
- * 
+ *
  */
 private function checkDBConnection(){
   echo 'DEBUG NOTES:<br>';
   echo '--------------------------------<br>';
   echo "test_connection<br>";
   foreach ($this->model->connection->success as $key => $value) {
-    echo $key . " : " . $value . '<br>'; 
+    echo $key . " : " . $value . '<br>';
   }
-  
+
   //perform a sample Query
   echo '--------------------------------<br>';
   echo 'database returns the following data (as an array_dump) : <br>';
