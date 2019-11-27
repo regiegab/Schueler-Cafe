@@ -8,7 +8,7 @@ public function display($template, $data){
 
   }else{
     echo "<br><br>invalid template!!!";
-    $errorMessage = "There was an unknown error with loading your web page!; template: ".$template;
+    $errorMessage = "There was an unknown error with loading your web page!";
     $this->displayError($errorMessage);
   } // else Ende
 

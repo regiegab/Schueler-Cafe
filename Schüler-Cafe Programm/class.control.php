@@ -2,20 +2,33 @@
 class Control{
 
 var $model;
+var $view;
 /*
 *all data passed on to the view
 */
 var $viewData; // array
+var $input; // array --> GET and POST
 
 public function __construct($input){
-//is session set?
-//check if user login valid
-$this->handleInput($input);
-$this->model = new Model;
+  $this->view = new View;
+  $this->model = new Model;
 
-//for debug purposes - establish the DB connection and perform a sample Query
-//will be called every time
-$this->checkDBConnection();
+  // checks whether user is still logge in
+  if($this->checkLoginState()){
+    $this->input = $input;
+    //is session set?
+    //check if user login valid
+
+    $this->handleInput($input);
+
+    //for debug purposes - establish the DB connection and perform a sample Query
+    //will be called every time
+    $this->checkDBConnection();
+  }else{
+  echo "info_connection_expired";
+  $this->view->display("Templates/login.html", $this->viewData);
+}
+
 
 }
 
@@ -23,8 +36,6 @@ public function handleInput($input){
   // echo "<br>Control: handleInput(\$input)";
 
   $template = "Templates/login.html";
-
-  //$this->model->loadData($input);
 
   if (isset($input['action'])){
 
@@ -59,38 +70,35 @@ public function handleInput($input){
         // $this->viewData['products'] = array("p1" => "Kaffee", "p2"=>"Muffin" );//$this->model->getAllProducts();
         // break;
       case "doLogin":
-        //check data with SQLiteDatabase
-        if(false){ // if data is correct | was kommt in die Klammer beim if?
-          // go to main menu
-          // $template = "Templates/main.html";
-        }else{
-          // go back to Login
-          echo "info_incorrect_username_or_password";
-          $template = "Templates/login.html";
-        } // end else
+        $myArray = $this->checkLogin($this->input);
+        $template = $myArray['template'];
       break;
       case "doLogout":
         // Logout
       break;
 
 
-      case "open_sale":
+      case "open_shop":
         include("scripts/control/sale.php");
+        // sale($input);
       break;
       case "open_magazine":
         include("scripts/control/magazine.php");
+        // magazine($input);
       break;
       case "open_userInterface":
         include("scripts/control/userInterface.php");
+        // userInterface($input);
       break;
       case "open_settings":
         include("scripts/control/settings.php");
+        // settings($input);
       break;
       case "open_logs":
         include("scripts/control/logs.php");
+        // logs($input);
       break;
       default:
-
         $template = "Templates/login.html";
 
     } //end switch
@@ -98,11 +106,11 @@ public function handleInput($input){
   }//end if
 
 
-  $view = new View;
+
 
 
     // echo "<br><br>load template: ".$template;
-    $view->display($template, $this->viewData);
+    $this->view->display($template, $this->viewData);
 
 } //end handleInput()
 
@@ -127,6 +135,105 @@ private function checkDBConnection(){
   echo '<br>--------------------------------<br>';
 }
 
+function checkLoginState(){
+  $return = false;
+
+  if(true){
+    $return = true;
+  }
+  return $return;
+}
+
+/**
+  * function to check compare inserted data in login form with db'
+  * returns true if data is correct
+  * @param Array loginData
+  */
+
+private function checkLogin($input){
+  // get data from db
+  $db = $this->model->getUserData();
+
+  var_dump($db);
+  echo "<br><br>";
+
+  // data from GET / POST
+  echo "input:<br>";
+  $insertedUsername = $input['username'];
+  $insertedPassword = $input['password'];
+  var_dump($insertedUsername);
+  var_dump($insertedPassword);
+  echo "<br><br>";
+
+  // $columns = array(); // the key from $db for matching users is saved in this array
+  // $x = 0; // variable to count matching usernames
+  $success; // array if username matches [0] = true and if password matches [1] = true and with key for matching user in $db [1]
+  foreach ($db as $key => $value) {
+    if($insertedUsername == $value[1]){
+      // $columns[$x] = $key;
+      // echo "<br><br>username_match".$x."<br><br>";
+      // $matchingUsers[$x] = $value;
+      $matchingUsers[$key] = $value;
+      $success[0] = true;
+      $success[2] = $key;
+      break;
+      // $x++;
+    } else {
+      $success[0] = false;
+      $success[1] = false;
+    }// end if
+  }
+
+  // echo "<br><br>\$columns:<br>";
+  // var_dump($columns);
+  // echo "<br><br>";
+  //
+  echo "matching users:<br>";
+  // $matchingUsers = array(); // the data of matching users is saved in this array
+  // $y = 0; // variable to count matching users
+  // foreach ($columns as $key => $value) {
+  //   $matchingUsers[$y] = $db[$value];
+  //   // var_dump($db[$value]);
+  //   // echo "<br><br>";
+  //   $y++;
+  // }
+  var_dump($matchingUsers);
+  echo "<br><br>";
+
+  // compare password with username
+  if($success[0]){
+    foreach ($matchingUsers as $key => $value) {
+      if($value !== null){
+        if($value[2] == $insertedPassword){
+          $success[1] = true;
+          // $success[2] = $key;
+          break;
+        } // end if 3
+      } // end if 2
+    } // end foreach
+  } // end if 1
+
+
+  echo "matching user:<br>";
+  var_dump($success);
+  echo "<br><br>";
+
+  //check data with SQLiteDatabase
+  $return = array();
+  if($success[0] && $success[1]){ // if data is correct
+    echo "<br><br>logged in";
+    // go to main menu
+    $userNumber = $success[2];
+    $return['template'] = "Templates/main.php";
+    $return['userNumber'] = $userNumber;
+    return $return;
+  }else{
+    // go back to Login
+    echo "info_incorrect_username_or_password";
+    $return['template'] = "Templates/login.html";
+    return $return;
+  } // end else
+}
 
 
 

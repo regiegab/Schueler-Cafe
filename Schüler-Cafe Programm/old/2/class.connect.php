@@ -8,7 +8,7 @@ var $db; // mysqli class
 * establish connection
 */
 public function __construct(){
-
+	
 	$this->db = mysqli_connect("localhost", "susocafe_mysql", "DiuSCDB%2019!", "susocafe");
 	$success = array();
 	if(!$this->db)
@@ -19,7 +19,7 @@ public function __construct(){
 		$this->success = array("message" => "Connection established!","host" => mysqli_get_host_info($this->db) . PHP_EOL );
 
 		}
-
+	
 }
 
 /**
@@ -29,7 +29,7 @@ public function __construct(){
 */
 public function basicQuery($query) {
 
-	$result = $this->db->query($query);
+	$result = $this->db->query("SELECT * FROM user");
     if (!empty($result) ){
 		$value = array();
 		$anz = $result->field_count; //number of data fields
@@ -43,12 +43,12 @@ public function basicQuery($query) {
 			$valCount++;
 		}
 		$result->free();//the result is emptied
-		return $value; // an array with numeric indices for the row and fields
+		return $value; // an array with numeric indices for the row and fields 
 	} else {
 		//if the query produces an empty array return null to the Model
 		return null;
 	}
-
+	
 
 
 	}

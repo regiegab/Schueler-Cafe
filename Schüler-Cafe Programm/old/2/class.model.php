@@ -32,29 +32,14 @@ class Model{
       //query was empty
         return null;  //or whatever else you need
       }
+
   }
 
-  /**
-   * a function to gather the data of the user table
-   */
-  public function getUserData() {
-
-    $data = $this->connection->basicQuery("SELECT * FROM user");
-    if ($data != null) {
-      //go through rows and process the data
-      foreach($data as $d) {
-        //you can now access every field with $d[index] and do whatever you like with it
-        //i.e. make a json String out of it
-      }
-      //or simply return the whole array
-      return $data;
-
-      } else {
-      //query was empty
-        return null;  //or whatever else you need
-      }
-  }
-}
+// kann gelöscht werden
+//   public function loadData($input){
+//     echo "<br>Model: loadData";
+//   }
+// }
 
 
 ?>
