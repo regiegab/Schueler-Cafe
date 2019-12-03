@@ -41,34 +41,6 @@ public function handleInput($input){
 
     switch($input['action']){
 
-      // //OPTION1 - processing javascript requests
-      // case "js":
-      //   $returnArray = array();
-      //   //javascript posts to server
-      //   if($input['action'] == "buy") {
-      //     $returnArray = array("status"=> 200, "product" => $input['name']);
-      //     }
-      //     die(json_encode($returnArray));
-      //     break;
-      // case "login":
-      //   //check login data
-      //   $template = "startseite.php";
-      //   break;
-      // case "kasse":
-
-      //OPTION2 - processing javascript requests
-      //check if javascript request
-
-        // if($input['action'] == "buy") {
-        //   $returnArray = array();
-        //   $returnArray = array("status"=> 200, "product" => $input['name']);
-        //   die(json_encode($returnArray));
-        //   }
-        //
-        // //Kassentenmplate
-        // $template = "kasse.php";
-        // $this->viewData['products'] = array("p1" => "Kaffee", "p2"=>"Muffin" );//$this->model->getAllProducts();
-        // break;
       case "doLogin":
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
@@ -79,8 +51,8 @@ public function handleInput($input){
           //save token in DB
           $this->model->updateToken($myArray['userId'],$token);
           $template = "Templates/main.php";
-        } 
-        
+        }
+
       break;
       case "doLogout":
         // Logout
@@ -161,13 +133,7 @@ function checkLoginState(){
   */
 
 private function checkLogin($input){
-  // get data from db
-  /*
-  $db = $this->model->getUserData();
 
-  var_dump($db);
-  echo "<br><br>";
-  */
   // data from GET / POST
   echo "input:<br>";
   $insertedUsername = $input['username'];
@@ -175,7 +141,7 @@ private function checkLogin($input){
 
     return $this->model->checkLoginData($insertedUsername,$insertedPassword);
 
-  
+
 }
 
 
