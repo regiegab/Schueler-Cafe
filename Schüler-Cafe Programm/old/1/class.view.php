@@ -4,11 +4,11 @@ var $data;
 
 public function display($template, $data){
   $this->data = $data;
-  if(@include($template)){
+  if(@include("Templates/".$template)){
 
   }else{
     echo "<br><br>invalid template!!!";
-    $errorMessage = "There was an unknown error with loading your web page!; template: ".$template;
+    $errorMessage = "There was an unknown error with loading your web page!";
     $this->displayError($errorMessage);
   } // else Ende
 
