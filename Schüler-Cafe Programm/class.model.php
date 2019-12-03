@@ -54,6 +54,41 @@ class Model{
         return null;  //or whatever else you need
       }
   }
+
+
+  /**
+   * check Login Data  
+   * @param string username
+   * @param string password
+   */
+  public function checkLoginData($login,$pw){
+      
+      $data = $this->connection->basicQuery('SELECT id,login,role FROM user 
+    WHERE login="'. $login . '" AND password = "'. $pw .'"');
+    if (!empty($data) ){
+        $array = array();
+        $array['userId'] = $data[0][0];
+        //add other values
+        return $array;
+    } else {
+        return null;
+    }
+  }
+
+  /**
+   * update user token
+   * sends created userToken to database
+   * @param int userId
+   * @param string Token
+   */
+  public function updateToken($id,$token) {
+      $now = date('Y-m-d H:i');
+      echo "INSERT INTO login_token (`token`,`userId`,`loginTime`) 
+      VALUES ('$token','$id','$now') ";
+      $this->connection->basicQuery("INSERT INTO login_token (`token`,`userId`,`loginTime`) 
+      VALUES ('$token','$id','$now') " );
+
+  }
 }
 
 

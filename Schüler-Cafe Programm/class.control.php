@@ -71,7 +71,16 @@ public function handleInput($input){
         // break;
       case "doLogin":
         $myArray = $this->checkLogin($this->input);
-        $template = $myArray['template'];
+        if ($myArray != null) {
+          //create token
+          $token = "qwertzuiop";
+          //save token
+          $_SESSION['usertoken'] = $token;
+          //save token in DB
+          $this->model->updateToken($myArray['userId'],$token);
+          $template = "Templates/main.php";
+        } 
+        
       break;
       case "doLogout":
         // Logout
@@ -129,15 +138,16 @@ private function checkDBConnection(){
   }
 
   //perform a sample Query
-  echo '--------------------------------<br>';
+  /*echo '--------------------------------<br>';
   echo 'database returns the following data (as an array_dump) : <br>';
   var_dump($this->model->getData() ); //getData is a function of Model to perform a simple Query
   echo '<br>--------------------------------<br>';
+  */
 }
 
 function checkLoginState(){
   $return = false;
-
+  var_dump($_SESSION);
   if(true){
     $return = true;
   }
@@ -152,87 +162,20 @@ function checkLoginState(){
 
 private function checkLogin($input){
   // get data from db
+  /*
   $db = $this->model->getUserData();
 
   var_dump($db);
   echo "<br><br>";
-
+  */
   // data from GET / POST
   echo "input:<br>";
   $insertedUsername = $input['username'];
   $insertedPassword = $input['password'];
-  var_dump($insertedUsername);
-  var_dump($insertedPassword);
-  echo "<br><br>";
 
-  // $columns = array(); // the key from $db for matching users is saved in this array
-  // $x = 0; // variable to count matching usernames
-  $success; // array if username matches [0] = true and if password matches [1] = true and with key for matching user in $db [1]
-  foreach ($db as $key => $value) {
-    if($insertedUsername == $value[1]){
-      // $columns[$x] = $key;
-      // echo "<br><br>username_match".$x."<br><br>";
-      // $matchingUsers[$x] = $value;
-      $matchingUsers[$key] = $value;
-      $success[0] = true;
-      $success[2] = $key;
-      break;
-      // $x++;
-    } else {
-      $success[0] = false;
-      $success[1] = false;
-    }// end if
-  }
+    return $this->model->checkLoginData($insertedUsername,$insertedPassword);
 
-  // echo "<br><br>\$columns:<br>";
-  // var_dump($columns);
-  // echo "<br><br>";
-  //
-  echo "matching users:<br>";
-  // $matchingUsers = array(); // the data of matching users is saved in this array
-  // $y = 0; // variable to count matching users
-  // foreach ($columns as $key => $value) {
-  //   $matchingUsers[$y] = $db[$value];
-  //   // var_dump($db[$value]);
-  //   // echo "<br><br>";
-  //   $y++;
-  // }
-  var_dump($matchingUsers);
-  echo "<br><br>";
-
-  // compare password with username
-  if($success[0]){
-    foreach ($matchingUsers as $key => $value) {
-      if($value !== null){
-        if($value[2] == $insertedPassword){
-          $success[1] = true;
-          // $success[2] = $key;
-          break;
-        } // end if 3
-      } // end if 2
-    } // end foreach
-  } // end if 1
-
-
-  echo "matching user:<br>";
-  var_dump($success);
-  echo "<br><br>";
-
-  //check data with SQLiteDatabase
-  $return = array();
-  if($success[0] && $success[1]){ // if data is correct
-    echo "<br><br>logged in";
-    // go to main menu
-    $userNumber = $success[2];
-    $return['template'] = "Templates/main.php";
-    $return['userNumber'] = $userNumber;
-    return $return;
-  }else{
-    // go back to Login
-    echo "info_incorrect_username_or_password";
-    $return['template'] = "Templates/login.html";
-    return $return;
-  } // end else
+  
 }
 
 
