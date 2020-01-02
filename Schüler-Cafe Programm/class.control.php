@@ -67,7 +67,6 @@ public function handleInput($input){
         include("scripts/control/sale.php");
         // sale($input);
       break;
-<<<<<<< HEAD
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
         $this->magazine = new Magazine($this->input['magazine']);
@@ -75,14 +74,12 @@ public function handleInput($input){
 
         // this is necessary to send the information from the magazine class to the view class / template
         $this->viewData = $this->magazine->return;
-        
+
         $template = "Templates/magazine.php";
       break;
-=======
       //case "open_magazine":
       //  include("scripts/control/magazine.php");
       //break;
->>>>>>> 0ed7b3fbe2cf74a2f01c11f7b5895f803bfc2acf
       case "open_userInterface":
         include("scripts/control/userInterface.php");
         // userInterface($input);
