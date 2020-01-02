@@ -64,10 +64,9 @@ public function handleInput($input){
         include("scripts/control/sale.php");
         // sale($input);
       break;
-      case "open_magazine":
-        include("scripts/control/magazine.php");
-          //magazine($input);
-      break;
+      //case "open_magazine":
+      //  include("scripts/control/magazine.php");
+      //break;
       case "open_userInterface":
         include("scripts/control/userInterface.php");
         // userInterface($input);
