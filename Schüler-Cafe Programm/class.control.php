@@ -1,4 +1,5 @@
 <?php
+
 class Control{
 
 var $model;
@@ -65,7 +66,7 @@ public function handleInput($input){
       break;
       case "open_magazine":
         include("scripts/control/magazine.php");
-        // magazine($input);
+          //magazine($input);
       break;
       case "open_userInterface":
         include("scripts/control/userInterface.php");
