@@ -53,6 +53,11 @@ class Model{
         $array = array();
         $array['userId'] = $data[0][0];
         //add other values
+
+        $userId = $array['userId'];
+
+        $role = $this->connection->basicQuery('SELECT role FROM user WHERE ID='.$userId);
+        $array['role'] = $role[0][0];
         return $array;
     } else {
         return null;
@@ -67,12 +72,17 @@ class Model{
    */
   public function updateToken($id,$token) {
       $now = date('Y-m-d H:i');
-      echo "INSERT INTO login_token (`token`,`userId`,`loginTime`)
-      VALUES ('$token','$id','$now') ";
       $this->connection->basicQuery("INSERT INTO login_token (`token`,`userId`,`loginTime`)
       VALUES ('$token','$id','$now') " );
 
   }
+
+  public function getSpecificData($query){
+      $return = $this->connection->basicQuery($query);      
+      return $return;
+  }
+
+
 }
 
 

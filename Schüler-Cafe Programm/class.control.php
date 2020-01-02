@@ -12,6 +12,7 @@ var $input; // array --> GET and POST
 
 // vars for the the different sections of the shop
 var $magazine;
+var $users;
 
 public function __construct($input){
   $this->view = new View;
@@ -52,9 +53,26 @@ public function handleInput($input){
           $token = "qwertzuiop";
           //save token
           $_SESSION['usertoken'] = $token;
+
+          $_SESSION['userId'] = $myArray['userId'];
+          $_SESSION['role'] = $myArray['role'];
+
           //save token in DB
           $this->model->updateToken($myArray['userId'],$token);
           $template = "Templates/main.php";
+        } else {
+          ?><!DOCTYPE html>
+          <html>
+            <head>
+            </head>
+            <body>
+
+            </body>
+            <script type="text/javascript">
+              alert("Data incorrect!");
+            </script>
+          </html>
+          <?php
         }
 
       break;
@@ -67,6 +85,7 @@ public function handleInput($input){
         include("scripts/control/sale.php");
         // sale($input);
       break;
+
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
         $this->magazine = new Magazine($this->input['magazine']);
@@ -76,14 +95,23 @@ public function handleInput($input){
         $this->viewData = $this->magazine->return;
 
         $template = "Templates/magazine.php";
+
       break;
       //case "open_magazine":
       //  include("scripts/control/magazine.php");
-      //break;
       case "open_userInterface":
-        include("scripts/control/userInterface.php");
+      echo "<br><br>open_userInterface<br>";
+      $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
+      $this->users = new Users($this->input['userInterface'],$userList);
+      // include("scripts/control/magazine.php");
+
+      // this is necessary to send the information from the users class to the view class / template
+      $this->viewData = $this->users->return;
+      $template = "Templates/userInterface.php";
+        // include("scripts/control/userInterface.php");
         // userInterface($input);
       break;
+
       case "open_settings":
         echo "<br><br>open settings<br>";
         include("scripts/control/settings.php");
