@@ -1,4 +1,5 @@
 <?php
+
 class Control{
 
 var $model;
@@ -8,6 +9,9 @@ var $view;
 */
 var $viewData; // array
 var $input; // array --> GET and POST
+
+// vars for the the different sections of the shop
+var $magazine;
 
 public function __construct($input){
   $this->view = new View;
@@ -64,14 +68,21 @@ public function handleInput($input){
         // sale($input);
       break;
       case "open_magazine":
-        include("scripts/control/magazine.php");
-        // magazine($input);
+        echo "<br><br>open_magazine<br>";
+        $this->magazine = new Magazine($this->input['magazine']);
+        // include("scripts/control/magazine.php");
+
+        // this is necessary to send the information from the magazine class to the view class / template
+        $this->viewData = $this->magazine->return;
+        
+        $template = "Templates/magazine.php";
       break;
       case "open_userInterface":
         include("scripts/control/userInterface.php");
         // userInterface($input);
       break;
       case "open_settings":
+        echo "<br><br>open settings<br>";
         include("scripts/control/settings.php");
         // settings($input);
       break;
