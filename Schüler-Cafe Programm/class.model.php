@@ -17,7 +17,7 @@ class Model{
    * a template function to gather some data from the database
    */
   public function getData() {
-
+    $data = $this->connection->basicQuery("SELECT * FROM `magazine`");
     $data = $this->connection->basicQuery("SELECT * FROM user");
     if ($data != null) {
       //go through rows and process the data
