@@ -45,7 +45,7 @@
            $username = $value[1];
            $role = $value[2];
            $description = $value[3];
-           echo "<li name=\"".$name."\">".$username." | role: ".$role." | ".$description." | <button onclick=\"openEdit(".$name.")\">edit</button> | <button onclick='deleteUser(".$name.",\"".$username."\")'>delete</button></li>";
+           echo "<li name=\"$name\">$username | role: $role | $description | <button onclick=\"openEdit($name)\">edit</button> | <button onclick='deleteUser($name,\"$username\")'>delete</button></li>";
            echo "<br>";
            // echo implode(" ",$value);
 
