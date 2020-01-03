@@ -28,7 +28,7 @@
           $product = $value[1];
           $amount = $value[2];
           $price = $value[3];
-          echo "<li $id.$product.$amount.$price.</li>";
+          echo "<li>$id.$product.$amount.$price.</li>";
           echo "<br>";
           // echo implode(" ",$value);
 

@@ -88,7 +88,7 @@ public function handleInput($input){
 
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
-        $this->magazine = new Magazine($this->input);
+        // $this->magazine = new Magazine($this->input);
         // include("scripts/control/magazine.php");
         $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
         $this->magazine = new Magazine($this->input,$products);

@@ -9,11 +9,11 @@ class Magazine{
 
   // functions
   //constructor
-  public function __construct($input_from_control){
+  public function __construct($input_from_control,$products){
     echo "<br><br>Successfully opened \"class.magazine.php\"";
-    $this->produts = $products;
+    $this->products = $products;
     $this->$mInput = $input_from_control;
-    // var_dump($this->$mInput);
+    // var_dump($this->products);
     $this->handleInput($this->$mInput);
   }
 
@@ -40,10 +40,10 @@ class Magazine{
         $this->return['test'] = "<br>   test successful<br>";
       break;
       default:
-      $this->displayProducts($this->produts);
+      $this->displayProducts($this->products);
     }//end switch
   }else{
-    $this->displayProducts($this->produts);
+    $this->displayProducts($this->products);
   }
   }// end handleInput()
   public function displayProducts($products){
