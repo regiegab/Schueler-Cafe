@@ -33,7 +33,7 @@
            $username = $value[1];
            $role = $value[2];
            $description = $value[3];
-           echo "<li name=\"".$name."\">".$username." | role: ".$role." | ".$description." | <button onclick=\"editUser(".$name.")\">edit</button> | <button>delete</button></li>";
+           echo "<li name=\"".$name."\">".$username." | role: ".$role." | ".$description." | <button onclick=\"editUser(".$name.")\">edit</button> | <button onclick='deleteUser(".$name.",\"".$username."\")'>delete</button></li>";
            echo "<br>";
            // echo implode(" ",$value);
 
@@ -53,8 +53,15 @@
       document.getElementById('userList').style.display = "inline";
     }
 
-    function editUser(user){
-      location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface&userInterface=editUser&user="+user);
+    function editUser(userId){
+      location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface&userInterface=editUser&user="+userId);
+    }
+
+    function deleteUser(userId,username){
+      if(confirm("Do you really want to delete the user \""+username+"\"?")){
+        location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface&userInterface=deleteUser&user="+userId);
+      }
+
     }
   </script>
 </html>

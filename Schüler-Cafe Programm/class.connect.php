@@ -53,6 +53,17 @@ public function basicQuery($query) {
 
 	}
 
+	/**
+	* perform a query that deletes sth
+	* @param string
+	* @return array
+	*/
+	public function deleteQuery($query) {
+		// echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+		var_dump($query);
+		$this->db->query($query);
+	}
+
 
 }
 ?>

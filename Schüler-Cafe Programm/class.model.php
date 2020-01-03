@@ -77,8 +77,23 @@ class Model{
 
   }
 
+
+  /**
+   * a function to perform a query that requests data from the db
+   * @param string the query
+   */
   public function getSpecificData($query){
-      $return = $this->connection->basicQuery($query);      
+      $return = $this->connection->basicQuery($query);
+      return $return;
+  }
+
+  /**
+   * a function to perform a query that deletes data from the db
+   * @param string the query
+   */
+  public function deleteData($query){
+    // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+      $return = $this->connection->deleteQuery($query);
       return $return;
   }
 

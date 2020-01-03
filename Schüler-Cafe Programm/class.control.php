@@ -107,7 +107,39 @@ public function handleInput($input){
       // include("scripts/control/magazine.php");
 
       // this is necessary to send the information from the users class to the view class / template
-      $this->viewData = $this->users->return;
+      if(isset($this->users->return)){
+        $this->viewData = $this->users->return;
+      } // end if
+
+      // if Users wants to do sth with db thier query should be executed
+      // var_dump($this->users->db_return);
+      if(isset($this->users->db_return['action'])){
+        switch ($this->users->db_return['action']){
+          case "delete":
+            if(isset($this->users->db_return['delete'])){
+              // echo "<br><br><br>control<br><br>delete<br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+              $this->model->deleteData($this->users->db_return['delete']);
+              // $anInput['userInterface'] = "default";
+              // $this->users = new Users($anInput,$userList);
+              ?>
+              <!-- this reloads the page so that the change can be seen in the html output -->
+              <!DOCTYPE html>
+              <html>
+                <script type="text/javascript">
+                  location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface");
+                </script>
+              </html>
+              <?php
+              die();
+            }  // end if inner
+            break;
+          case "edit":
+            break;
+          default:
+            // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+        } // end switch
+      } // end if
+
       $template = "Templates/userInterface.php";
         // include("scripts/control/userInterface.php");
         // userInterface($input);
