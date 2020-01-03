@@ -5,6 +5,7 @@ class Magazine{
   var $mInput; // Array
   var $return; // Array
   var $products; //Array
+  var $db_return; // Array
 
   // functions
   //constructor
@@ -47,6 +48,16 @@ class Magazine{
   }// end handleInput()
   public function displayProducts($products){
     $this->return['products'] = $products;
+  }
+
+
+
+  public function deleteUser($product){
+
+      echo "delete product".$product;
+      $this->db_return['action'] = "delete";
+      $this->db_return['delete'] = 'DELETE FROM `magazine` WHERE `ID` = '.$product;
+
   }
 }
 ?>

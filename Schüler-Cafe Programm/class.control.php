@@ -96,6 +96,33 @@ public function handleInput($input){
         if(isset($this->magazine->return)){
           $this->viewData = $this->magazine->return;
         }
+
+        if(isset($this->magazine->db_return['action'])){
+          switch ($this->magazine->db_return['action']){
+            case "delete":
+              if(isset($this->magazine->db_return['delete'])){
+
+                $this->model->deleteData($this->magazine->db_return['delete']);
+
+                ?>
+                <!-- this reloads the page so that the change can be seen in the html output -->
+                <!DOCTYPE html>
+                <html>
+                  <script type="text/javascript">
+                    location.replace("http://susocafe.bplaced.net/index.php?action=open_magazine");
+                  </script>
+                </html>
+                <?php
+                die();
+              }  // end if inner
+              break;
+            case "edit":
+              break;
+            default:
+              // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+          } // end switch
+        } // end if
+
         $template = "Templates/magazine.php";
 
       break;
