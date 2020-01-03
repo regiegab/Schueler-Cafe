@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Magazine</title>
-  </head>
-  <body>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Magazine</title>
+  </head>
+  <body>
     <!-- test div -->
-   <div style="color:green;">
+   <div style="color:green;">
     <br>
     <br>
     <br>
@@ -23,5 +23,5 @@
      here the text of the magazine template ends
    </div>
 
-  </body>
-</html>
+  </body>
+</html>

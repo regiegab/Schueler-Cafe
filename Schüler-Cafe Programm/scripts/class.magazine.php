@@ -19,7 +19,7 @@ class Magazine{
   private function handleInput($input){
 
     // switch to do different actions
-    switch ($input){
+    switch ($input['magazine']){
       case "addProduct":
       //open menu with product, price, amount
       //add inserted values to db

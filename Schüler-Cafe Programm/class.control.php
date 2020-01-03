@@ -88,7 +88,7 @@ public function handleInput($input){
 
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
-        $this->magazine = new Magazine($this->input['magazine']);
+        $this->magazine = new Magazine($this->input);
         // include("scripts/control/magazine.php");
 
         // this is necessary to send the information from the magazine class to the view class / template
@@ -101,8 +101,9 @@ public function handleInput($input){
       //  include("scripts/control/magazine.php");
       case "open_userInterface":
       echo "<br><br>open_userInterface<br>";
+      // get data from all users from db
       $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
-      $this->users = new Users($this->input['userInterface'],$userList);
+      $this->users = new Users($this->input,$userList);
       // include("scripts/control/magazine.php");
 
       // this is necessary to send the information from the users class to the view class / template
@@ -127,9 +128,6 @@ public function handleInput($input){
     } //end switch
 
   }//end if
-
-
-
 
 
     // echo "<br><br>load template: ".$template;
@@ -182,11 +180,7 @@ private function checkLogin($input){
   $insertedPassword = $input['password'];
 
     return $this->model->checkLoginData($insertedUsername,$insertedPassword);
-
-
 }
-
-
 
 } //end Control
 

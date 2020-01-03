@@ -22,18 +22,18 @@
     ?>
    </div>
 
-   <div id="userList" style="color:blue">
+   <div id="userList" style="color:blue;display:none;">
      <h1>User List</h1>
      <ul style="list-style-type:none">
        <?php
-       if (isset($this->data['userList'])){
+       if(isset($this->data['userList'])){
          foreach ($this->data['userList'] as $value) {
            // var_dump($value);
            $name = $value[0];
            $username = $value[1];
            $role = $value[2];
            $description = $value[3];
-           echo "<li name=\"".$name."\">".$username." | role: ".$role." | ".$description." | <button>edit</button> | <button>delete</button></li>";
+           echo "<li name=\"".$name."\">".$username." | role: ".$role." | ".$description." | <button onclick=\"editUser(".$name.")\">edit</button> | <button>delete</button></li>";
            echo "<br>";
            // echo implode(" ",$value);
 
@@ -47,4 +47,14 @@
      here the text of the userInterface template ends
    </div>
   </body>
+  <script type="text/javascript">
+    var show_userList = <?php if(isset($this->data['userList'])){echo "true";}else{echo "false";} ?>;
+    if(show_userList == true){
+      document.getElementById('userList').style.display = "inline";
+    }
+
+    function editUser(user){
+      location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface&userInterface=editUser&user="+user);
+    }
+  </script>
 </html>
