@@ -4,12 +4,13 @@ class Magazine{
 
   var $mInput; // Array
   var $return; // Array
-
+  var $products; //Array
 
   // functions
   //constructor
   public function __construct($input_from_control){
     echo "<br><br>Successfully opened \"class.magazine.php\"";
+    $this->produts = $products;
     $this->$mInput = $input_from_control;
     // var_dump($this->$mInput);
     $this->handleInput($this->$mInput);
@@ -19,6 +20,7 @@ class Magazine{
   private function handleInput($input){
 
     // switch to do different actions
+    if(isset($input['magazine'])){
     switch ($input['magazine']){
       case "addProduct":
       //open menu with product, price, amount
@@ -37,8 +39,14 @@ class Magazine{
         $this->return['test'] = "<br>   test successful<br>";
       break;
       default:
-    }
+      $this->displayProducts($this->produts);
+    }//end switch
+  }else{
+    $this->displayProducts($this->produts);
+  }
   }// end handleInput()
-
+  public function displayProducts($products){
+    $this->return['products'] = $products;
+  }
 }
 ?>

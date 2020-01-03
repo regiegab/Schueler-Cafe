@@ -90,10 +90,12 @@ public function handleInput($input){
         echo "<br><br>open_magazine<br>";
         $this->magazine = new Magazine($this->input);
         // include("scripts/control/magazine.php");
-
+        $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
+        $this->magazine = new Magazine($this->input,$products);
         // this is necessary to send the information from the magazine class to the view class / template
-        $this->viewData = $this->magazine->return;
-
+        if(isset($this->magazine->return)){
+          $this->viewData = $this->magazine->return;
+        }
         $template = "Templates/magazine.php";
 
       break;

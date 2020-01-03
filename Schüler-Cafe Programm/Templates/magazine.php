@@ -14,8 +14,10 @@
     here the text of the magazine template begins
     <br>
     <?php
-    // var_dump($this->data);
-    echo $this->data['test'];
+    var_dump($this->data);
+    if(isset($this->data['test'])){
+      echo $this->data['test'];
+    }
     ?>
    </div>
 
