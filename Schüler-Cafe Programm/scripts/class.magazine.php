@@ -52,7 +52,7 @@ class Magazine{
 
 
 
-  public function deleteUser($product){
+  public function deleteProduct($product){
 
       echo "delete product".$product;
       $this->db_return['action'] = "delete";

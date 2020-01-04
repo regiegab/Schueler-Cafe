@@ -28,19 +28,47 @@
           $product = $value[1];
           $amount = $value[2];
           $price = $value[3];
-          echo "<li>$id.$product.$amount.$price.</li>";
-          echo "<br>";
+          //echo "<div><table>$id.$product.$amount.$price.</table></div>";
+          //echo "<br>";
           // echo implode(" ",$value);
+echo " <div>
+      <table style=overflow-x:auto;>
+        <th>ID</th>
+        <th>Produkt</th>
+        <th>Anzahl</th>
+        <th>Preis</th>
+      </tr>
+      <td> $id </td>
+        <td> $product </td>
+        <td> $amount </td>
+        <td> $price </td>
+        <td> <button onclick='deleteProduct($id, $product)'>Löschen</button> </td>
+        <td> <button onclick='editProduct($product)'>Produkt bearbeiten</button> </td>
+    <tr>
+      </table>
+    </div>
+        </ul>
+       </div>
+       
+       <script type="text/javascript">
+       function deleteUser(productID,product){
+         if(confirm(Do you really want to delete the product \+product+\?)){
+           location.replace(index.php?action=open_magzine&magazine=deleteProduct&product=+productID);
+         }
+         </script>
+
+       ";
+
 
         } // end foreach
       } // end if
+
+
       ?>
-    </ul>
-   </div>
 
-   <div style="color:darkgreen">
-     here the text of the magazine template ends
-   </div>
+      <div style="color:darkgreen">
+        here the text of the magazine template ends
+      </div>
 
-  </body>
-</html>
+      </body>
+      </html>
