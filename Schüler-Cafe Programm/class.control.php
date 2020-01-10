@@ -164,6 +164,23 @@ public function handleInput($input){
             break;
           case "edit":
             break;
+          case "add":
+            if(isset($this->users->db_return['add'])){
+              // var_dump($this->users->db_return['add']);
+              // echo "<br>control<br>";
+              $this->model->addData($this->users->db_return['add']);
+              ?>
+              <!-- this reloads the page so that the change can be seen in the html output -->
+              <!DOCTYPE html>
+              <html>
+                <script type="text/javascript">
+                  location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface");
+                </script>
+              </html>
+              <?php
+              die();
+            }
+            break;
           default:
             // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
         } // end switch

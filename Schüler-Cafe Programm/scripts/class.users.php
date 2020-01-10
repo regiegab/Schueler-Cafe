@@ -24,9 +24,7 @@ class Users{
     if(isset($input['userInterface'])){
       switch ($input['userInterface']){
         case "addUser":
-        //open menu with product, price, amount
-        //add inserted values to db
-        //INSERT INTO `magazine`(`ID`, `product`, `price`, `amount`) VALUES ([value-1],[value-2],[value-3],[value-4])
+          $this->addUser($input['username'],$input['password'],$input['role'],$input['description']);
         break;
         case 'deleteUser':
           $this->deleteUser($input['user']);
@@ -98,11 +96,11 @@ class Users{
     * @param String what should be edited
     */
   public function editUser($user,$edit){
-    $role_needed = 3;
+    $role_needed = 4;
     if($this->compareRole($role_needed)){
       echo "edit user".$user;
     } else {
-      $this->alert("You do not have the permission to do that!");
+      $this->permissionInsufficient();
     }
   }
 
@@ -111,14 +109,46 @@ class Users{
     * @param int userId
     */
   public function deleteUser($user){
-    $role_needed = 0;
+    $role_needed = 4;
     if($this->compareRole($role_needed)){
       echo "delete user".$user;
       $this->db_return['action'] = "delete";
       $this->db_return['delete'] = 'DELETE FROM `user` WHERE `ID` = '.$user;
     } else {
-      $this->alert("You do not have the permission to do that!");
+      $this->permissionInsufficient();
     }
+  }
+
+  /**
+    * function adds a new user
+    * @param String username
+    * @param String password
+    * @param String role
+    * @param String description
+    */
+  public function addUser($username,$password,$role,$description){
+    $role_needed = 4;
+    if($this->compareRole($role_needed)){
+      echo "<br>add user<br>".$username.$password.$role.$description."<br>";
+      $this->db_return['action'] = "add";
+      $this->db_return['add'] = 'INSERT INTO `user`(`ID`, `login`, `password`, `role`, `description`) VALUES (NULL,\''.$username.'\',\''.$password.'\',\''.$role.'\',\''.$description.'\')';
+    } else {
+      $this->permissionInsufficient();
+    }
+  }
+
+  // if the permission of the acting user is insufficient an error message will be displayed and the default userInterface will be displayed
+  private function permissionInsufficient(){
+    $this->alert("You do not have the permission to do that!");
+    ?>
+    <!-- this reloads the page so that the change can be seen in the html output -->
+    <!DOCTYPE html>
+    <html>
+      <script type="text/javascript">
+        location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface");
+      </script>
+    </html>
+    <?php
   }
 
 }
