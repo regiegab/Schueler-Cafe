@@ -31,7 +31,7 @@ class Users{
           // $this->show_userList($this->userList);
         break;
         case 'editUser':
-          $this->editUser($input['user'],$input['edit']);
+          $this->editUser($input['user'],$input['username'],$input['password'],$input['role'],$input['description']);
           // $this->show_userList($this->userList);
         break;
         case "test":
@@ -89,21 +89,6 @@ class Users{
     }
   }
 
-
-  /**
-    * function edits user
-    * @param int userId
-    * @param String what should be edited
-    */
-  public function editUser($user,$edit){
-    $role_needed = 4;
-    if($this->compareRole($role_needed)){
-      echo "edit user".$user;
-    } else {
-      $this->permissionInsufficient();
-    }
-  }
-
   /**
     * function deletes an user
     * @param int userId
@@ -136,6 +121,64 @@ class Users{
       $this->permissionInsufficient();
     }
   }
+
+  /**
+    * function edits an user
+    * @param int userID
+    * @param String username
+    * @param String password
+    * @param String role
+    * @param String description
+    */
+  public function editUser($user,$username,$password,$role,$description){
+    $role_needed = 4;
+    if($this->compareRole($role_needed)){
+      echo "<br>edit user<br>".$username.$password.$role.$description."<br>";
+
+      $query = 'UPDATE `user` SET ';
+      $komma = false;
+      if($username != null){
+        $query = $query.'`login`=\''.$username.'\'';
+        $komma = true;
+      }
+
+      if($password != null){
+        if($komma==true){
+          $query = $query.',';
+        }
+        $query = $query.'`password`=\''.$password.'\'';
+        $komma = true;
+      }else{
+        // $komma = false;
+      }
+
+      if($role != null){
+        if($komma==true){
+          $query = $query.',';
+        }
+        $query = $query.'`role`='.$role;
+      }else{
+        // $komma = false;
+      }
+
+      if($description != null){
+        if($komma==true){
+          $query = $query.',';
+        }
+        $query = $query.'`description`=\''.$description.'\'';
+      }
+
+      $query = $query.' WHERE `ID` = '.$user;
+
+      $this->db_return['action'] = "edit";
+      $this->db_return['edit'] = $query;
+      // var_dump($query);
+    } else {
+      $this->permissionInsufficient();
+    }
+  }
+
+  // UPDATE `user` SET `ID`=[value-1],`login`=[value-2],`password`=[value-3],`role`=[value-4],`description`=[value-5] WHERE `ID` = $user
 
   // if the permission of the acting user is insufficient an error message will be displayed and the default userInterface will be displayed
   private function permissionInsufficient(){

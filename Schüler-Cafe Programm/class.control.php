@@ -129,67 +129,55 @@ public function handleInput($input){
       //case "open_magazine":
       //  include("scripts/control/magazine.php");
       case "open_userInterface":
-      echo "<br><br>open_userInterface<br>";
-      // get data from all users from db
-      $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
-      $this->users = new Users($this->input,$userList);
-      // include("scripts/control/magazine.php");
+        echo "<br><br>open_userInterface<br>";
+        // get data from all users from db
+        $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
+        $this->users = new Users($this->input,$userList);
+        // include("scripts/control/magazine.php");
 
-      // this is necessary to send the information from the users class to the view class / template
-      if(isset($this->users->return)){
-        $this->viewData = $this->users->return;
-      } // end if
+        // this is necessary to send the information from the users class to the view class / template
+        if(isset($this->users->return)){
+          $this->viewData = $this->users->return;
+        } // end if
 
-      // if Users wants to do sth with db thier query should be executed
-      // var_dump($this->users->db_return);
-      if(isset($this->users->db_return['action'])){
-        switch ($this->users->db_return['action']){
-          case "delete":
-            if(isset($this->users->db_return['delete'])){
-              // echo "<br><br><br>control<br><br>delete<br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
-              $this->model->deleteData($this->users->db_return['delete']);
-              // $anInput['userInterface'] = "default";
-              // $this->users = new Users($anInput,$userList);
-              ?>
-              <!-- this reloads the page so that the change can be seen in the html output -->
-              <!DOCTYPE html>
-              <html>
-                <script type="text/javascript">
-                  location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface");
-                </script>
-              </html>
-              <?php
-              die();
-            }  // end if inner
-            break;
-          case "edit":
-            break;
-          case "add":
-            if(isset($this->users->db_return['add'])){
-              // var_dump($this->users->db_return['add']);
-              // echo "<br>control<br>";
-              $this->model->addData($this->users->db_return['add']);
-              ?>
-              <!-- this reloads the page so that the change can be seen in the html output -->
-              <!DOCTYPE html>
-              <html>
-                <script type="text/javascript">
-                  location.replace("http://susocafe.bplaced.net/index.php?action=open_userInterface");
-                </script>
-              </html>
-              <?php
-              die();
-            }
-            break;
-          default:
-            // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
-        } // end switch
-      } // end if
+        // if Users wants to do sth with db thier query should be executed
+        // var_dump($this->users->db_return);
+        if(isset($this->users->db_return['action'])){
+          switch ($this->users->db_return['action']){
+            case "delete":
+              if(isset($this->users->db_return['delete'])){
+                // echo "<br><br><br>control<br><br>delete<br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+                $this->model->deleteData($this->users->db_return['delete']);
+                // $anInput['userInterface'] = "default";
+                // $this->users = new Users($anInput,$userList);
+                $this->locationReplace("action=open_userInterface");
+              }  // end if inner
+              break;
+            case "edit":
+              if(isset($this->users->db_return['edit'])){
+                // var_dump($this->users->db_return['add']);
+                // echo "<br>control<br>";
+                $this->model->editData($this->users->db_return['edit']);
+                $this->locationReplace("action=open_userInterface");
+              }
+              break;
+            case "add":
+              if(isset($this->users->db_return['add'])){
+                // var_dump($this->users->db_return['add']);
+                // echo "<br>control<br>";
+                $this->model->addData($this->users->db_return['add']);
+                $this->locationReplace("action=open_userInterface");
+              }
+              break;
+            default:
+              // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+          } // end switch
+        } // end if
 
-      $template = "Templates/userInterface.php";
-        // include("scripts/control/userInterface.php");
-        // userInterface($input);
-      break;
+        $template = "Templates/userInterface.php";
+          // include("scripts/control/userInterface.php");
+          // userInterface($input);
+        break;
 
       case "open_settings":
         echo "<br><br>open settings<br>";
@@ -258,6 +246,24 @@ private function checkLogin($input){
   $insertedPassword = $input['password'];
 
     return $this->model->checkLoginData($insertedUsername,$insertedPassword);
+}
+
+/**
+  * opens a new location
+  * @param Array location
+  */
+private function locationReplace($location){
+  echo $location;
+  ?>
+  <!-- this reloads the page so that the change can be seen in the html output -->
+  <!DOCTYPE html>
+  <html>
+    <script type="text/javascript">
+      location.replace("http://susocafe.bplaced.net/index.php\?<?php echo $location; ?>");
+    </script>
+  </html>
+  <?php
+  die();
 }
 
 } //end Control
