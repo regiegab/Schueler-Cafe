@@ -22,6 +22,10 @@
     ?> -->
    </div>
 
+   <div id=goToMenuDiv>
+     <button type="button" onclick="location.replace('index.php?action=mainMenu')">Go back to menu</button>
+   </div>
+
    <div id="userList" style="color:purple;display:none;">
      <h1>User List</h1>
      <lo id="editField" style="display:none">
@@ -46,7 +50,7 @@
            $username = $value[1];
            $role = $value[2];
            $description = $value[3];
-           echo "<li name=\"$name\">$username | role: $role | $description | <button onclick='openEdit($name,\"$username\")'>edit</button> | <button onclick='deleteUser($name,\"$username\")'>delete</button></li>";
+           echo "<li name=\"$name\">$username | role: $role | $description | <button type=\"button\" onclick='openEdit($name,\"$username\")'>edit</button> | <button type=\"button\" onclick='deleteUser($name,\"$username\")'>delete</button></li>";
            echo "<br>";
            // echo implode(" ",$value);
          } // end foreach
@@ -54,7 +58,7 @@
        ?>
      </ul>
 
-     <button onclick="openAdd()">Add User</button><br>
+     <button type="button" onclick="openAdd()">Add User</button><br>
      <lo id="addField" style="display:none">
        <h2>Add User</h2><br>
        <form>

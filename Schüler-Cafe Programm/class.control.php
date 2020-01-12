@@ -80,6 +80,9 @@ public function handleInput($input){
         // Logout
       break;
 
+      case "mainMenu":
+        $template = "Templates/main.php";
+        break;
 
       case "open_shop":
         include("scripts/control/sale.php");
