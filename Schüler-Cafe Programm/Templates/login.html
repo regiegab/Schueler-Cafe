@@ -74,13 +74,57 @@
   </head>
   <body>
 
-<form class="box" action="index.php?action=doLogin" method="post">
+    <script
+
+      src="https://code.jquery.com/jquery-3.3.1.js"
+
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+
+      crossorigin="anonymous"></script>
+
+<!-- <form class="box" action="index.php?action=doLogin" method="post"> -->
+
+<div class="box">
+  <div id="status" style="color:red;">
+
+  </div>
   <h1>Login</h1>
-  <input type="text" name="username" placeholder="Name">
-  <input type="password" name="password" placeholder="Passwort">
-  <input type="submit" name="" value="Login">
+  <input type="text" id="username" placeholder="Name">
+  <input type="password" id="password" placeholder="Passwort">
+  <input type="submit" name="" value="Login" onclick="check()">
+</div>
+<!-- </form> -->
+<script type="text/javascript">
+  function check(){
+    name = document.getElementById('username').value;
+    password = document.getElementById('password').value;
 
-</form>
+    $.post('/?action=doLogin',
 
+            //here goes the data to be sent
+    	{
+                username: name,
+                password: password
+            },
+    	//now specify what is being done with the data
+    	function (data,status){
+                    // console.log(status);
+    		console.log(data);
+        data = JSON.parse(data); // target paghe returns a JSON Object (plain text array)
+        console.log(data);
+
+        if(data['status'] == "error"){
+          document.getElementById('status').innerHTML = data['message'];
+        }else{
+          location.replace("/?action=mainMenu");
+        }
+
+
+
+          }
+
+      );
+  }
+</script>
   </body>
 </html>

@@ -4,7 +4,6 @@ var $data;
 
 public function display($template, $data){
   $this->data = $data;
-  var_dump($this->data);
   if(include($template)){
   }else{
     echo "<br><br>invalid template!!!";

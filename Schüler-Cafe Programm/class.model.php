@@ -92,7 +92,7 @@ class Model{
    * @param string the query
    */
   public function deleteData($query){
-    // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+    // // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
       $return = $this->connection->deleteQuery($query);
       return $return;
   }
@@ -102,7 +102,7 @@ class Model{
    * @param string the query
    */
   public function addData($query){
-    // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+    // // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
       $return = $this->connection->addQuery($query);
       return $return;
   }
@@ -112,7 +112,7 @@ class Model{
    * @param string the query
    */
   public function editData($query){
-    // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+    // // echo "<br><br>model<br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
       $return = $this->connection->editQuery($query);
       return $return;
   }

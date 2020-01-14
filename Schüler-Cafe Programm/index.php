@@ -7,6 +7,7 @@ include("class.connect.php");
 
 include("scripts/class.magazine.php");
 include("scripts/class.users.php");
+include("scripts/class.shop.php");
 
 $input = array_merge($_GET,$_POST);
 new Control($input);

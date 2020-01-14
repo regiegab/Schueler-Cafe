@@ -1,7 +1,5 @@
 <?php
-
 class Control{
-
 var $model;
 var $view;
 /*
@@ -9,23 +7,18 @@ var $view;
 */
 var $viewData; // array
 var $input; // array --> GET and POST
-
 // vars for the the different sections of the shop
 var $magazine;
 var $users;
-
 public function __construct($input){
   $this->view = new View;
   $this->model = new Model;
-
   // checks whether user is still logge in
   if($this->checkLoginState()){
     $this->input = $input;
     //is session set?
     //check if user login valid
-
     $this->handleInput($input);
-
     //for debug purposes - establish the DB connection and perform a sample Query
     //will be called every time
     $this->checkDBConnection();
@@ -33,62 +26,44 @@ public function __construct($input){
   echo "info_connection_expired";
   $this->view->display("Templates/login.html", $this->viewData);
 }
-
-
 }
-
 public function handleInput($input){
   // echo "<br>Control: handleInput(\$input)";
-
   $template = "Templates/login.html";
-
   if (isset($input['action'])){
-
     switch($input['action']){
-
       case "doLogin":
+        $result = array();
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
           $token = "qwertzuiop";
           //save token
           $_SESSION['usertoken'] = $token;
-
           $_SESSION['userId'] = $myArray['userId'];
           $_SESSION['role'] = $myArray['role'];
-
           //save token in DB
           $this->model->updateToken($myArray['userId'],$token);
-          $template = "Templates/main.php";
+
+          $result['status'] = "success";
+          $result['message'] = "Login erfolgreich!";
+
         } else {
-          ?><!DOCTYPE html>
-          <html>
-            <head>
-            </head>
-            <body>
-
-            </body>
-            <script type="text/javascript">
-              alert("Data incorrect!");
-            </script>
-          </html>
-          <?php
+          $result['status'] = "error";
+          $result['message'] = "Daten inkorrekt!";
         }
-
+        die(json_encode($result));
       break;
       case "doLogout":
-        // Logout
+        session_unset();
       break;
-
       case "mainMenu":
         $template = "Templates/main.php";
         break;
-
       case "open_shop":
         include("scripts/control/sale.php");
         // sale($input);
       break;
-
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
         // $this->magazine = new Magazine($this->input);
@@ -99,14 +74,11 @@ public function handleInput($input){
         if(isset($this->magazine->return)){
           $this->viewData = $this->magazine->return;
         }
-
         if(isset($this->magazine->db_return['action'])){
           switch ($this->magazine->db_return['action']){
             case "delete":
               if(isset($this->magazine->db_return['delete'])){
-
                 $this->model->deleteData($this->magazine->db_return['delete']);
-
                 ?>
                 <!-- this reloads the page so that the change can be seen in the html output -->
                 <!DOCTYPE html>
@@ -125,9 +97,7 @@ public function handleInput($input){
               // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
           } // end switch
         } // end if
-
         $template = "Templates/magazine.php";
-
       break;
       //case "open_magazine":
       //  include("scripts/control/magazine.php");
@@ -137,12 +107,10 @@ public function handleInput($input){
         $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
         $this->users = new Users($this->input,$userList);
         // include("scripts/control/magazine.php");
-
         // this is necessary to send the information from the users class to the view class / template
         if(isset($this->users->return)){
           $this->viewData = $this->users->return;
         } // end if
-
         // if Users wants to do sth with db thier query should be executed
         // var_dump($this->users->db_return);
         if(isset($this->users->db_return['action'])){
@@ -176,12 +144,10 @@ public function handleInput($input){
               // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
           } // end switch
         } // end if
-
         $template = "Templates/userInterface.php";
           // include("scripts/control/userInterface.php");
           // userInterface($input);
         break;
-
       case "open_settings":
         echo "<br><br>open settings<br>";
         include("scripts/control/settings.php");
@@ -193,31 +159,23 @@ public function handleInput($input){
       break;
       default:
         $template = "Templates/login.html";
-
     } //end switch
-
   }//end if
-
-
     // echo "<br><br>load template: ".$template;
     $this->view->display($template, $this->viewData);
-
 } //end handleInput()
-
-
-
 /**
  * function to debug database connection
  *
  */
 private function checkDBConnection(){
   echo 'DEBUG NOTES:<br>';
+  var_dump($_SESSION);
   echo '--------------------------------<br>';
   echo "test_connection<br>";
   foreach ($this->model->connection->success as $key => $value) {
     echo $key . " : " . $value . '<br>';
   }
-
   //perform a sample Query
   /*echo '--------------------------------<br>';
   echo 'database returns the following data (as an array_dump) : <br>';
@@ -225,32 +183,26 @@ private function checkDBConnection(){
   echo '<br>--------------------------------<br>';
   */
 }
-
 function checkLoginState(){
   $return = false;
-  var_dump($_SESSION);
-  if(true){
+
+  if(isset($_SESSION)){
     $return = true;
   }
   return $return;
 }
-
 /**
   * function to check compare inserted data in login form with db'
   * returns true if data is correct
   * @param Array loginData
   */
-
 private function checkLogin($input){
-
   // data from GET / POST
-  echo "input:<br>";
+  // echo "input:<br>";
   $insertedUsername = $input['username'];
   $insertedPassword = $input['password'];
-
     return $this->model->checkLoginData($insertedUsername,$insertedPassword);
 }
-
 /**
   * opens a new location
   * @param Array location
@@ -268,8 +220,5 @@ private function locationReplace($location){
   <?php
   die();
 }
-
 } //end Control
-
-
 ?>
