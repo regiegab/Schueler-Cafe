@@ -59,8 +59,8 @@ public function basicQuery($query) {
 	* @return array
 	*/
 	public function deleteQuery($query) {
-		// // echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
-		// var_dump($query);
+		// echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+		var_dump($query);
 		$this->db->query($query);
 	}
 
@@ -70,7 +70,7 @@ public function basicQuery($query) {
 	* @return array
 	*/
 	public function addQuery($query) {
-		// // echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+		// echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
 		// var_dump($query);
 		$this->db->query($query);
 	}
@@ -81,8 +81,8 @@ public function basicQuery($query) {
 	* @return array
 	*/
 	public function editQuery($query) {
-		// // echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
-		// var_dump($query);
+		// echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+		var_dump($query);
 		$this->db->query($query);
 	}
 

@@ -72,8 +72,10 @@ class Model{
    */
   public function updateToken($id,$token) {
       $now = date('Y-m-d H:i');
-      $this->connection->basicQuery("INSERT INTO login_token (`token`,`userId`,`loginTime`)
-      VALUES ('$token','$id','$now') " );
+      // $this->connection->basicQuery("INSERT INTO login_token (`token`,`userId`,`loginTime`)
+      // VALUES ('$token','$id','$now') " );
+      $query = 'INSERT INTO `login_token`(`token`, `userId`, `loginTime`) VALUES (\''.$token.'\','.$id.',\''.$now.'\')';
+      $this->addData($query);
 
   }
 

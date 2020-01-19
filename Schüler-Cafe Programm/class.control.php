@@ -14,7 +14,7 @@ public function __construct($input){
   $this->view = new View;
   $this->model = new Model;
   // checks whether user is still logge in
-  if($this->checkLoginState()){
+  if($this->checkLoginState() || $this->isInput_doLogin($input)){
     $this->input = $input;
     //is session set?
     //check if user login valid
@@ -24,6 +24,7 @@ public function __construct($input){
     $this->checkDBConnection();
   }else{
   echo "info_connection_expired";
+  // die(json_encode($result));
   $this->view->display("Templates/login.html", $this->viewData);
 }
 }
@@ -37,7 +38,7 @@ public function handleInput($input){
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
-          $token = "qwertzuiop";
+          $token = $this->generateRandomString($length = 10);
           //save token
           $_SESSION['usertoken'] = $token;
           $_SESSION['userId'] = $myArray['userId'];
@@ -46,7 +47,7 @@ public function handleInput($input){
           $this->model->updateToken($myArray['userId'],$token);
 
           $result['status'] = "success";
-          $result['message'] = "Login erfolgreich!";
+          $result['message'] = "Login erfolgreich!".$_SESSION['usertoken'];
 
         } else {
           $result['status'] = "error";
@@ -164,6 +165,35 @@ public function handleInput($input){
     // echo "<br><br>load template: ".$template;
     $this->view->display($template, $this->viewData);
 } //end handleInput()
+
+/**
+ * a function to check whether the demanded action is "doLogin"
+ */
+private function isInput_doLogin($input){
+  $return = false;
+  if(isset($input['action'])){
+    if($input['action'] == "doLogin"){
+      $return = true;
+    }
+  }
+  return $return;
+}
+
+/**
+ * a function to generate a randomized string
+ * @param int length of the string
+ */
+private function generateRandomString($length) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+
 /**
  * function to debug database connection
  *
@@ -183,14 +213,17 @@ private function checkDBConnection(){
   echo '<br>--------------------------------<br>';
   */
 }
+
+
 function checkLoginState(){
   $return = false;
 
-  if(isset($_SESSION)){
+  if(isset($_SESSION['usertoken'])){
     $return = true;
   }
   return $return;
 }
+
 /**
   * function to check compare inserted data in login form with db'
   * returns true if data is correct
@@ -203,6 +236,7 @@ private function checkLogin($input){
   $insertedPassword = $input['password'];
     return $this->model->checkLoginData($insertedUsername,$insertedPassword);
 }
+
 /**
   * opens a new location
   * @param Array location
