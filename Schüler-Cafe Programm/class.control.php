@@ -2,6 +2,7 @@
 class Control{
 var $model;
 var $view;
+
 /*
 *all data passed on to the view
 */
@@ -10,6 +11,11 @@ var $input; // array --> GET and POST
 // vars for the the different sections of the shop
 var $magazine;
 var $users;
+
+// variables that can be changed by using the settings class
+var $maximalSessionTime = 30; // int in minutes
+
+
 public function __construct($input){
   $this->view = new View;
   $this->model = new Model;
@@ -54,17 +60,45 @@ public function handleInput($input){
           $result['message'] = "Daten inkorrekt!";
         }
         die(json_encode($result));
-      break;
+        break;
       case "doLogout":
         session_unset();
-      break;
+        break;
       case "mainMenu":
         $template = "Templates/main.php";
         break;
       case "open_shop":
-        include("scripts/control/sale.php");
-        // sale($input);
-      break;
+        echo "<br><br>open_shop<br>";
+        $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
+        $this->shop = new Shop($this->input,$products);
+        // this is necessary to send the information from the shop class to the view class / template
+        if(isset($this->shop->return)){
+          $this->viewData = $this->shop->return;
+        }
+
+        if(isset($this->shop->db_return['action'])){
+          switch ($this->shop->db_return['action']){
+            case "delete":
+              if(isset($this->shop->db_return['delete'])){
+
+              $this->model->deleteData($this->shop->db_return['delete']);
+
+              ?>
+              <!-- this reloads the page so that the change can be seen in the html output -->
+              <!DOCTYPE html>
+              <html>
+                <script type="text/javascript">
+                  location.replace("http://susocafe.bplaced.net/index.php?action=open_shop");
+                </script>
+              </html>
+              <?php
+              die();
+            }  // end if inner
+          } // end switch
+        } // ebd outer if
+        break;
+      case "edit":
+          break;
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
         // $this->magazine = new Magazine($this->input);
@@ -198,7 +232,7 @@ private function generateRandomString($length) {
  * function to debug database connection
  *
  */
-private function checkDBConnection(){
+public function checkDBConnection(){
   echo 'DEBUG NOTES:<br>';
   var_dump($_SESSION);
   echo '--------------------------------<br>';
@@ -215,11 +249,36 @@ private function checkDBConnection(){
 }
 
 
-function checkLoginState(){
+private function checkLoginState(){
   $return = false;
 
   if(isset($_SESSION['usertoken'])){
-    $return = true;
+    $now = date('Y-m-d H:i:s');
+
+    $token = $_SESSION['usertoken'];
+    $userId = $_SESSION['userId'];
+
+    $sessionTime = $this->model->getSpecificData('SELECT `loginTime` FROM `login_token` WHERE `token`=\''.$token.'\' AND `userId` = '.$userId);
+    $sessionTime_string = $sessionTime[0][0];
+
+    $now_time = strtotime($now);
+    $sessionTime_time = strtotime($sessionTime_string);
+
+    $timeDifference = $this->maximalSessionTime;
+    $maxTime = date('Y-m-d H:i:s', strtotime('+'.$timeDifference.' minutes',$sessionTime_time));
+    $maxTime_time = strtotime($maxTime);
+
+    $maxTime_int = $maxTime_time;
+    $nowTime_int = $now_time;
+
+    // echo "maxTime_int = $maxTime_int; nowTime_int = $nowTime_int";
+
+    if ($maxTime_int > $nowTime_int){
+     // echo "now is later";
+     $return = true;
+   }else{
+     // echo "sth is wrong";
+   }
   }
   return $return;
 }
