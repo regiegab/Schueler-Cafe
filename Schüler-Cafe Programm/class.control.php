@@ -11,15 +11,22 @@ var $input; // array --> GET and POST
 // vars for the the different sections of the shop
 var $magazine;
 var $users;
+var $settings;
 
-var $token_lenght = 50; // int: number of chars in the token
+// var $token_lenght = 50;
 // variables that can be changed by using the settings class
-var $maximalSessionTime = 30; // int in minutes
+// var $maximalSessionTime = 30; // int in minutes
 
 
 public function __construct($input){
   $this->view = new View;
   $this->model = new Model;
+
+  $settingsArray = array();
+  $settingsArray['accessToDb'] = true; // here should be checked whether there is a connection to the db
+  $this->settings = new Settings($settingsArray);
+  $this->applySettings();
+
   // checks whether user is still logge in
   if($this->checkLoginState() || $this->isInput_doLogin($input)){
     $this->input = $input;
@@ -45,7 +52,7 @@ public function handleInput($input){
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
-          $token = $this->generateRandomString($this->token_lenght);
+          $token = $this->generateRandomString($this->settings->token_lenght);
           //save token
           $_SESSION['usertoken'] = $token;
           $_SESSION['userId'] = $myArray['userId'];
@@ -265,7 +272,7 @@ private function checkLoginState(){
     $now_time = strtotime($now);
     $sessionTime_time = strtotime($sessionTime_string);
 
-    $timeDifference = $this->maximalSessionTime;
+    $timeDifference = $this->settings->maximalSessionTime;
     $maxTime = date('Y-m-d H:i:s', strtotime('+'.$timeDifference.' minutes',$sessionTime_time));
     $maxTime_time = strtotime($maxTime);
 
@@ -313,6 +320,15 @@ private function locationReplace($location){
   </html>
   <?php
   die();
+}
+
+
+/**
+  * applys all the settings
+  */
+private function applySettings(){
+
+
 }
 } //end Control
 ?>
