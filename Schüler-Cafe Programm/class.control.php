@@ -12,6 +12,7 @@ var $input; // array --> GET and POST
 var $magazine;
 var $users;
 
+var $token_lenght = 50; // int: number of chars in the token
 // variables that can be changed by using the settings class
 var $maximalSessionTime = 30; // int in minutes
 
@@ -44,7 +45,7 @@ public function handleInput($input){
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
-          $token = $this->generateRandomString($length = 10);
+          $token = $this->generateRandomString($this->token_lenght);
           //save token
           $_SESSION['usertoken'] = $token;
           $_SESSION['userId'] = $myArray['userId'];
