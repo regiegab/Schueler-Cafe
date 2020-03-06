@@ -13,23 +13,24 @@ var $magazine;
 var $users;
 var $settings;
 
-// var $token_lenght = 50;
-// variables that can be changed by using the settings class
-// var $maximalSessionTime = 30; // int in minutes
-
 
 public function __construct($input){
   $this->view = new View;
   $this->model = new Model;
 
-  $settingsArray = array();
-  $settingsArray['accessToDb'] = true; // here should be checked whether there is a connection to the db
-  $this->settings = new Settings($settingsArray);
-  $this->applySettings();
+  @$this->input = $input;
+
+  // $settingsArray = array();
+  $this->input['settings_initial'] = true;
+  @$settingsList = $this->model->getSpecificData('SELECT * FROM `settings`'); // SELECT `ID`, `setting`, `value`, `description` FROM `settings`
+  $this->settings = new Settings($this->input,$settingsList);
+  // $settingsArray['accessToDb'] = true; // here should be checked whether there is a connection to the db
+  // $this->settings = new Settings($settingsArray);
+  // $this->applySettings();
 
   // checks whether user is still logge in
   if($this->checkLoginState() || $this->isInput_doLogin($input)){
-    $this->input = $input;
+    // $this->input = $input;
     //is session set?
     //check if user login valid
     $this->handleInput($input);
@@ -52,7 +53,7 @@ public function handleInput($input){
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
-          $token = $this->generateRandomString($this->settings->token_lenght);
+          $token = $this->generateRandomString($this->settings->settings['token_lenght']);
           //save token
           $_SESSION['usertoken'] = $token;
           $_SESSION['userId'] = $myArray['userId'];
@@ -76,14 +77,20 @@ public function handleInput($input){
         $template = "Templates/main.php";
         break;
       case "open_shop":
+        $template = "Templates/shop.php";
         echo "<br><br>open_shop<br>";
         $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
         $this->shop = new Shop($this->input,$products);
-        // this is necessary to send the information from the shop class to the view class / template
         if(isset($this->shop->return)){
           $this->viewData = $this->shop->return;
         }
-
+        // this is necessary to send the information from the shop class to the view class / template
+        if(isset($input['finishtrans']) ){
+          //lese JSON String aus cart
+          //vervollständige Einkauf (Methode in Shop)
+          //$this->shop->finishTransaction();
+        }
+        /*
         if(isset($this->shop->db_return['action'])){
           switch ($this->shop->db_return['action']){
             case "delete":
@@ -104,6 +111,7 @@ public function handleInput($input){
             }  // end if inner
           } // end switch
         } // ebd outer if
+        */
         break;
       case "edit":
           break;
@@ -141,8 +149,8 @@ public function handleInput($input){
           } // end switch
         } // end if
         $template = "Templates/magazine.php";
-      break;
-      //case "open_magazine":
+        break;
+        //case "open_magazine":
       //  include("scripts/control/magazine.php");
       case "open_userInterface":
         echo "<br><br>open_userInterface<br>";
@@ -192,10 +200,41 @@ public function handleInput($input){
           // userInterface($input);
         break;
       case "open_settings":
-        echo "<br><br>open settings<br>";
-        include("scripts/control/settings.php");
-        // settings($input);
-      break;
+        echo "<br><br>open_settings<br>";
+
+          $this->input['settings_initial'] = false;
+          $settingsList = $this->model->getSpecificData('SELECT * FROM `settings`');
+          // // debug
+          //   echo "var_dump($settingsList);:<br>";
+          //   var_dump($settingsList);
+          //   echo "<br><br>";
+          $this->settings = new Settings($this->input,$settingsList);
+
+        // this is necessary to send the information from the settings class to the view class / template
+        if(isset($this->settings->return)){
+          $this->viewData = $this->settings->return;
+        } // end if
+
+        // var_dump($this->settings->db_return);
+        if(isset($this->settings->db_return['action'])){
+          switch ($this->settings->db_return['action']){
+            case "change":
+              if(isset($this->settings->db_return['change'])){
+                // var_dump($this->settings->db_return['change']);
+                // echo "<br>control<br>";
+                $this->model->editData($this->settings->db_return['change']);
+                $this->locationReplace("action=open_settings");
+              }
+              break;
+
+            default:
+              // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
+          } // end switch
+        } // end if
+        $template = "Templates/settings.php";
+          // include("scripts/control/userInterface.php");
+          // userInterface($input);
+        break;
       case "open_logs":
         include("scripts/control/logs.php");
         // logs($input);
@@ -272,7 +311,7 @@ private function checkLoginState(){
     $now_time = strtotime($now);
     $sessionTime_time = strtotime($sessionTime_string);
 
-    $timeDifference = $this->settings->maximalSessionTime;
+    $timeDifference = $this->settings->settings['maximalSessionTime'];
     $maxTime = date('Y-m-d H:i:s', strtotime('+'.$timeDifference.' minutes',$sessionTime_time));
     $maxTime_time = strtotime($maxTime);
 
@@ -322,13 +361,5 @@ private function locationReplace($location){
   die();
 }
 
-
-/**
-  * applys all the settings
-  */
-private function applySettings(){
-
-
-}
 } //end Control
 ?>
