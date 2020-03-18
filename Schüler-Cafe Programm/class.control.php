@@ -22,8 +22,15 @@ public function __construct($input){
 
   // $settingsArray = array();
   $this->input['settings_initial'] = true;
+  // echo $this->input['settings'];
   @$settingsList = $this->model->getSpecificData('SELECT * FROM `settings`'); // SELECT `ID`, `setting`, `value`, `description` FROM `settings`
   $this->settings = new Settings($this->input,$settingsList);
+  if(isset($this->settings->db_return['action'])){
+    if($this->settings->db_return['action'] == "reset"){
+      $this->resetSettings();
+    } // end if 2
+  } // end if 1
+
   // $settingsArray['accessToDb'] = true; // here should be checked whether there is a connection to the db
   // $this->settings = new Settings($settingsArray);
   // $this->applySettings();
@@ -53,7 +60,7 @@ public function handleInput($input){
         $myArray = $this->checkLogin($this->input);
         if ($myArray != null) {
           //create token
-          $token = $this->generateRandomString($this->settings->settings['token_lenght']);
+          $token = $this->generateRandomString($this->settings->settings['general_tokenLenght']);
           //save token
           $_SESSION['usertoken'] = $token;
           $_SESSION['userId'] = $myArray['userId'];
@@ -156,7 +163,7 @@ public function handleInput($input){
         echo "<br><br>open_userInterface<br>";
         // get data from all users from db
         $userList = $this->model->getSpecificData('SELECT `ID`, `login`, `role`, `description` FROM `user`');
-        $this->users = new Users($this->input,$userList);
+        $this->users = new Users($this->input,$userList,$this->settings->settings);
         // include("scripts/control/magazine.php");
         // this is necessary to send the information from the users class to the view class / template
         if(isset($this->users->return)){
@@ -226,7 +233,13 @@ public function handleInput($input){
                 $this->locationReplace("action=open_settings");
               }
               break;
-
+            case "reset":
+              echo "<br>RESET!!!(control)<br>";
+              var_dump($this->settings->db_return['backup']);
+              // UPDATE `settings` SET `value`=[value-3] WHERE `setting`
+              $this->resetSettings();
+              $this->locationReplace("");
+              break;
             default:
               // echo "<br><br>defaulr<br>control<br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
           } // end switch
@@ -311,7 +324,7 @@ private function checkLoginState(){
     $now_time = strtotime($now);
     $sessionTime_time = strtotime($sessionTime_string);
 
-    $timeDifference = $this->settings->settings['maximalSessionTime'];
+    $timeDifference = $this->settings->settings['general_maximalSessionTime'];
     $maxTime = date('Y-m-d H:i:s', strtotime('+'.$timeDifference.' minutes',$sessionTime_time));
     $maxTime_time = strtotime($maxTime);
 
@@ -359,6 +372,18 @@ private function locationReplace($location){
   </html>
   <?php
   die();
+}
+
+/**
+  * resets all settuings to default values
+  */
+private function resetSettings(){
+  $backup = $this->settings->db_return['backup'];
+  foreach ($backup as $key => $value) {
+    echo "<br>key:$key | value: $value<br>";
+    $query = "UPDATE `settings` SET `value` = $value WHERE `setting` = \"$key\"";
+    $this->model->editData($query);
+  } // end foreach
 }
 
 } //end Control

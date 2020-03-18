@@ -7,11 +7,16 @@ class Users{
   var $return; // Array
   var $db_return; // Array
 
+  var $settings; // Array with all the settings from db
+
 
   // functions
   // constructor
-  public function __construct($input_from_control,$userList){
+  public function __construct($input_from_control,$userList,$settings){
     echo "<br><br>Successfully opened \"class.users.php\"<br>";
+
+    $this->settings = $settings;
+
     $this->userList = $userList;
     $this->$uInput = $input_from_control;
 
@@ -94,7 +99,12 @@ class Users{
     * @param int userId
     */
   public function deleteUser($user){
-    $role_needed = 4;
+    // DEBUG:
+    // echo "<br>var_dump:::<br>";
+    // var_dump($this->settings['users_minimumRoleDelete']);
+    // echo "<br><br>";
+
+    $role_needed = $this->settings['users_minimumRoleDelete'];
     if($this->compareRole($role_needed)){
       echo "delete user".$user;
       $this->db_return['action'] = "delete";
@@ -112,7 +122,7 @@ class Users{
     * @param String description
     */
   public function addUser($username,$password,$role,$description){
-    $role_needed = 4;
+    $role_needed = $this->settings['users_minimumRoleAdd'];
     if($this->compareRole($role_needed)){
       echo "<br>add user<br>".$username.$password.$role.$description."<br>";
       $this->db_return['action'] = "add";
@@ -131,7 +141,7 @@ class Users{
     * @param String description
     */
   public function editUser($user,$username,$password,$role,$description){
-    $role_needed = 4;
+    $role_needed = $this->settings['users_minimumRoleEdit'];
     if($this->compareRole($role_needed)){
       echo "<br>edit user<br>".$username.$password.$role.$description."<br>";
 

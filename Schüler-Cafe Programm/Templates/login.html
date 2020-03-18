@@ -92,6 +92,7 @@
   <input type="text" id="username" placeholder="Name">
   <input type="password" id="password" placeholder="Passwort">
   <input type="submit" name="" value="Login" onclick="check()">
+  <input type="submit" name="" value="Reset" onclick="reset()">
 </div>
 <!-- </form> -->
 <script type="text/javascript">
@@ -124,6 +125,12 @@
           }
 
       );
+  }
+
+  function reset(){
+    if(confirm("Do you really want to reset the settings to the default values? Please do this only in an emergency!")){
+      location.replace("index.php?action=open_settings&settings=reset");
+    } // end if
   }
 </script>
   </body>

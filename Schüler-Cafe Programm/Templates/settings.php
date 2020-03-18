@@ -28,6 +28,9 @@
 
    <div id="settingsList" style="color:purple;display:none;">
      <h1>Settings:</h1>
+
+     <button type="button" onclick="reset()">Reset</button>
+
      <lo id="editField" style="display:none">
        <h2>Edit</h2><br>
        <a id="setting_edit_memory" style="display:inline"></a>:
@@ -99,6 +102,13 @@
       // console.log(old_security_level);
       // console.log("index.php?action=open_settings&settings=changeSetting&setting="+settingId+"&value="+newValue+"&security_level="+security_level+"&description="+description+"&old_security_level="+old_security_level);
       location.replace("index.php?action=open_settings&settings=changeSetting&setting="+settingId+"&value="+newValue+"&security_level="+security_level+"&description="+description+"&old_security_level="+old_security_level);
+    }
+
+    function reset(){
+      console.log("RESET!!!");
+      if(confirm("Do you really want to reset the settings to the default values?")){
+        location.replace("index.php?action=open_settings&settings=reset");
+      } // end if
     }
   </script>
 </html>

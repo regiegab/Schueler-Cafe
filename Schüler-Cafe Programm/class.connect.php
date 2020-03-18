@@ -82,7 +82,7 @@ public function basicQuery($query) {
 	*/
 	public function editQuery($query) {
 		// echo "<br><br><br><br><br><br><br><br>asdfghdhkjbn4jkw<br><br>trh<br><br>drth";
-		var_dump($query);
+		// var_dump($query);
 		$this->db->query($query);
 	}
 

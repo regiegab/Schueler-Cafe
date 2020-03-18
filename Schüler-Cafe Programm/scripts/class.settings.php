@@ -5,14 +5,21 @@ class Settings{
   var $settingsList = array(); // Array
   var $return; // Array
   var $db_return; // Array
+  var $backup; // Array - a buckup of the $settings
 
   // array with default values
   var $settings = [
-          'token_lenght' => 50,             // number of chars in the token string
-          'maximalSessionTime' => 3,      // int in minutes
+          'general_tokenLenght' => 50,    // number of chars in the token string
+          'general_maximalSessionTime' => 3, // int in minutes
+          'users_minimumRoleDelete' => 4, // the minimum role you need to have in order to delete a user entry from db
+          'users_minimumRoleAdd' => 4, // the minimum role you need to have in order to add a user entry to db
+          'users_minimumRoleEdit' => 4, // the minimum role you need to have in order to edit a user entry in db
         ];
 
   public function __construct($input_from_control,$settingsList){
+
+    // saves the initial $this->settings array in case of a reset
+    $this->backup = $this->settings;
 
     $this->settingsList = $settingsList;
     $this->input = $input_from_control;
@@ -23,6 +30,14 @@ class Settings{
     if(isset($this->input['settings_initial'])){
       if($this->input['settings_initial']){
         // the class is called in control->__construct()
+
+        // reset
+        if(isset($this->input['settings'])){
+          if($this->input['settings'] == "reset"){
+            $this->reset();
+          }
+        }
+
       }else{
         // the class is called in control->handleInput()
         $this->handleInput($this->input);
@@ -47,7 +62,9 @@ private function handleInput($input){
       case 'changeSetting':
         $this->changeSetting($input['setting'],$input['old_security_level'],$input['security_level'],$input['value'],$input['description']);
         break;
-
+      case 'reset':
+        $this->reset();
+        break;
       default:
         $this->show_settings($this->settingsList);
         break;
@@ -81,49 +98,56 @@ private function changeSetting($settingId,$old_security_level,$new_security_leve
 
   // check wheter user has the permission to adjust that setting
   if($this->checkPermission($old_security_level)){
-    // change db
-    echo "setting changed!<br>";
 
-    $query = 'UPDATE `settings` SET ';
-    $komma = false;
-    if($new_security_level != null){
-      $query = $query.'`security_level`=\''.$new_security_level.'\'';
-      $komma = true;
-    }
+    if($this->checkPermission($new_security_level)){
 
-    if($new_value != null){
-      if($new_value >= 0){
+      // change db
+      echo "setting changed!<br>";
+
+      $query = 'UPDATE `settings` SET ';
+      $komma = false;
+      if($new_security_level != null){
+        $query = $query.'`security_level`=\''.$new_security_level.'\'';
+        $komma = true;
+      }
+
+      if($new_value != null){
+        if($new_value >= 0){
+          if($komma==true){
+            $query = $query.',';
+          }
+          $query = $query.'`value`=\''.$new_value.'\'';
+          $komma = true;
+        }else{
+          $this->alert("The value has to be >= 0!");
+        }
+      }else{
+        // $komma = false;
+      }
+
+      if($new_description != null){
         if($komma==true){
           $query = $query.',';
         }
-        $query = $query.'`value`=\''.$new_value.'\'';
-        $komma = true;
-      }else{
-        $this->alert("The value has to be >= 0!");
+        $query = $query.'`description`=\''.$new_description.'\'';
       }
+
+      $query = $query.' WHERE `ID` = '.$settingId;
+
+      // var_dump($query);
+
+      $this->db_return['action'] = "change";
+      $this->db_return['change'] = $query;
+
     }else{
-      // $komma = false;
-    }
-
-    if($new_description != null){
-      if($komma==true){
-        $query = $query.',';
-      }
-      $query = $query.'`description`=\''.$new_description.'\'';
-    }
-
-    $query = $query.' WHERE `ID` = '.$settingId;
-
-    // var_dump($query);
-
-    $this->db_return['action'] = "change";
-    $this->db_return['change'] = $query;
-
+      $this->alert("You cannot asasign a setting a higher security level as your own role!");
+      $this->reload();
+    } // end if 2
 
   }else{
     $this->alert("Your role is insufficient to adjust that setting!");
     $this->reload();
-  } // end if
+  } // end if 1
 
 }
 
@@ -229,6 +253,15 @@ private function compareRole($role_needed){
   */
 public function reset(){
   // set db values to default values from the $this->settings Array
+  $backup = $this->backup;
+
+  $this->alert("RESET!!!");
+
+  $this->db_return['action'] = "reset";
+  $this->db_return['backup'] = $backup;
+
+  // UPDATE `settings` SET `value`=[value-3] WHERE `setting`
+
 } // end reset()
 
 /**
