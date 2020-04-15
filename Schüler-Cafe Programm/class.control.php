@@ -120,14 +120,14 @@ public function handleInput($input){
         } // ebd outer if
         */
         break;
-      case "edit":
-          break;
+      // case "edit":
+      //     break;
       case "open_magazine":
         echo "<br><br>open_magazine<br>";
         // $this->magazine = new Magazine($this->input);
         // include("scripts/control/magazine.php");
         $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
-        $this->magazine = new Magazine($this->input,$products);
+        $this->magazine = new Magazine($this->input,$products,$this->settings->settings);
         // this is necessary to send the information from the magazine class to the view class / template
         if(isset($this->magazine->return)){
           $this->viewData = $this->magazine->return;
@@ -137,16 +137,7 @@ public function handleInput($input){
             case "delete":
               if(isset($this->magazine->db_return['delete'])){
                 $this->model->deleteData($this->magazine->db_return['delete']);
-                ?>
-                <!-- this reloads the page so that the change can be seen in the html output -->
-                <!DOCTYPE html>
-                <html>
-                  <script type="text/javascript">
-                    location.replace("http://susocafe.bplaced.net/index.php?action=open_magazine");
-                  </script>
-                </html>
-                <?php
-                die();
+                $this->locationReplace("action=open_magazine");
               }  // end if inner
               break;
             case "edit":
@@ -249,7 +240,7 @@ public function handleInput($input){
           // userInterface($input);
         break;
       case "open_logs":
-        include("scripts/control/logs.php");
+        // include("scripts/control/logs.php");
         // logs($input);
       break;
       default:
