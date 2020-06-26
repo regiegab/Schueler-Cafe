@@ -14,6 +14,9 @@ class Settings{
           'users_minimumRoleDelete' => 4, // the minimum role you need to have in order to delete a user entry from db
           'users_minimumRoleAdd' => 4, // the minimum role you need to have in order to add a user entry to db
           'users_minimumRoleEdit' => 4, // the minimum role you need to have in order to edit a user entry in db
+          'magazine_minimumRoleDelete' => 2, // the minimum role you need to have in order to delete a product entry from db
+          'magazine_minimumRoleAdd' => 2, // the minimum role you need to have in order to add a product entry to db
+          'magazine_minimumRoleEdit' => 2, // the minimum role you need to have in order to edit a product entry in db
         ];
 
   public function __construct($input_from_control,$settingsList){
