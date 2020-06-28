@@ -30,7 +30,16 @@
         <!-- in the <a></a> the productId is saved -->
         <form><a id="productId" style="display:none"></a>
           <input type="text" id="edit_name" placeholder="neuer Produktname">
-          <input type="number" id="edit_category" placeholder="neue Kategorie">
+          <select id="edit_category">
+            <?php
+            // creates the drop-down menu to select the category
+              if(isset($this->data['categoryList'])){
+                foreach ($this->data['categoryList'] as $key => $value) {
+                  echo "<option value=\"".$value[0]."\">".$value[1]."</option>";
+                } // end foreach
+              } // end if
+            ?>
+          </select>
           <input type="number" id="edit_amount" placeholder="neue Anzahl">
           <input type="number" id="edit_price" placeholder="neuer Preis pro Produkt">
           <input type="number" id="edit_refill" placeholder="neue Nachfüllwarnung bei...">
@@ -54,7 +63,7 @@
                     <th>Nachfüllwarnung bei...</th>
                   </tr>";
           foreach ($this->data['productList'] as $value) {
-            var_dump($value);
+            // var_dump($value);
             $id = $value[0];
             $product = $value[1];
             $price = $value[2];
@@ -62,13 +71,27 @@
             $category_Id = $value[4];
             $refill_at = $value[5];
 
+            // echo "<br><br>";
+            // var_dump($this->data['categoryList']);
+            // echo "<br>";
+
+            // --> display category name instead of its id
+            $category_name = null;
+            if(isset($this->data['categoryList'])){
+              $category_name = $this->data['categoryList'][$category_Id][1];
+              // echo "<br>";
+              // var_dump($category_name);
+              // echo "<br>";
+            } // end if
+
+
             //echo "<div><table>$id.$product.$amount.$price.</table></div>";
             //echo "<br>";
             // echo implode(" ",$value);
             echo "  <tr>
                       <td> $id </td>
                       <td> $product </td>
-                      <td> $category_Id </td>
+                      <td> $category_name </td>
                       <td> $amount </td>
                       <td> $price </td>
                       <td> $refill_at </td>
@@ -86,10 +109,19 @@
 
       <button type="button" onclick="openAdd()">Add Product</button><br>
       <lo id="addField" style="display:none">
-        <h2>Add User</h2><br>
+        <h2>Add Product</h2><br>
         <form>
           <input type="text" id="add_name" placeholder="Produktname">
-          <input type="number" id="add_category" placeholder="Kategorie">
+          <select id="add_category">
+            <?php
+            // creates the drop-down menu to select the category
+              if(isset($this->data['categoryList'])){
+                foreach ($this->data['categoryList'] as $key => $value) {
+                  echo "<option value=\"".$value[0]."\">".$value[1]."</option>";
+                } // end foreach
+              } // end if
+            ?>
+          </select>
           <input type="number" id="add_amount" placeholder="Anzahl">
           <input type="number" id="add_price" placeholder="Preis pro Produkt">
           <input type="number" id="add_refill" placeholder="Nachfüllwarnung bei...">

@@ -5,6 +5,7 @@ class Magazine{
   var $mInput; // Array: input coming from control class
   var $products; //Array: a list of all the products
   var $settings; // Array with all the settings imported from db
+  var $categories; //Array: a list of all the categories
 
   var $db_return; // Array: the query that should be executed in db
   var $return; // Array: what should be returned to control class (later passed to template)
@@ -12,11 +13,12 @@ class Magazine{
   // functions
 
   //constructor
-  public function __construct($input_from_control,$products,$settings){
+  public function __construct($input_from_control,$products,$settings,$categories){
     echo "<br><br>Successfully opened \"class.magazine.php\"";
 
     $this->settings = $settings;
     $this->products = $products;
+    $this->categories = $categories;
     $this->$mInput = $input_from_control;
     // var_dump($this->products);
     $this->handleInput($this->$mInput);
@@ -53,10 +55,10 @@ class Magazine{
         //   $this->return['test'] = "<br>   test successful<br>";
         // break;
         default:
-        $this->displayProducts($this->products);
+        $this->displayProducts();
       }//end switch
     }else{
-      $this->displayProducts($this->products);
+      $this->displayProducts();
     } // end if
   } // end handleInput()
 
@@ -65,8 +67,11 @@ class Magazine{
     * function displays all products
     * @param Array array of all products
     */
-  private function displayProducts($products){
+  private function displayProducts(){
+    $products = $this->products;
+    $categories = $this->categories;
     $this->return['productList'] = $products;
+    $this->return['categoryList'] = $categories;
   }
 
   /**
@@ -118,7 +123,7 @@ class Magazine{
     $role_needed = $this->settings['magazine_minimumRoleEdit'];
     if($this->compareRole($role_needed)){
       // echo "<br>edit user<br>".$product_name,$category,$amount,$price,$refill."<br>";
-      $query = $this->createEditQuery($parameters);
+      $query = $this->createEditQuery('magazine',$parameters);
       //
       //
       // $query = 'UPDATE `magazine` SET ';
@@ -164,8 +169,16 @@ class Magazine{
     }
   }
 
-  private function createEditQuery($parameters){
-    $query = 'UPDATE `magazine` SET ';
+  /**
+    * creates most of the edit query needed ín order to edit a product/category entry in db
+    * @param Array parameters (that should be edited)
+    */
+  private function createEditQuery($section,$parameters){
+    // $query = 'UPDATE `$section` SET ';
+    $query = $query.'UPDATE `';
+    $query = $query.$section;
+    $query = $query.'` SET ';
+
     // echo "<br><br>";
     // var_dump($parameters);
     // echo "<br><br>";

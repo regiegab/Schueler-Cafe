@@ -127,7 +127,10 @@ public function handleInput($input){
 
         // get data from all products from db
         $productList = $this->model->getSpecificData('SELECT `ID`, `product`, `price`, `amount`, `category_ID`, `refill` FROM `magazine`');
-        $this->magazine = new Magazine($this->input,$productList,$this->settings->settings);
+
+        $categories = $this->model->getSpecificData('SELECT `ID`, `category`, `describtion` FROM `categories_products`');
+
+        $this->magazine = new Magazine($this->input,$productList,$this->settings->settings, $categories);
 
         // this is necessary to send the information from the Magazine class to the view class / template
         if(isset($this->magazine->return)){
