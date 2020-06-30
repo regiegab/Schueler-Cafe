@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css"></link>
+
+<script
+
+  src="https://code.jquery.com/jquery-3.3.1.js"
+
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+
+  crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+</head>
+
+<body>
+
+
+<!-- format can be different material design css is used!! -->
+
+<div class="card col s6 l6 m6">
+<div class="card-content">
+<div class="input-field " >
+<input id="name" type="text" name="name" value="" >
+<label for="name" >please enter name</label>
+<input type="submit" value="send"onClick="check()" />
+</div>
+</div>
+</div>
+
+
+
+
+
+<script type="application/javascript">
+
+/**
+* this function is an example how the login could be done via javascript
+* the clear benefit of this is that reloads of the page are not required if sth goes wrong
+* and the page doese not need to be reloaded
+*/
+
+function check(){
+name = document.getElementById('name').value;
+//console.log(name);
+//the following method to send data via post requires the jquery.js framework
+//can be done with plain javascript, but more complex
+//first specify the target page
+$.post('check.php',
+
+        //here goes the data to be sent
+	{
+            name: name,
+            pass: "bernd1"
+        }, 
+	//now specify what is being done with the data
+	function (data,status){
+                console.log(status);
+		console.log(data);
+            	data = JSON.parse(data); // target paghe returns a JSON Object (plain text array)
+                console.log(data);
+                toastit(data['name']);
+
+         }
+
+        );
+
+
+
+} 
+
+
+
+
+
+function toastit(message) {
+Materialize.toast("You are " + message,4000,'blue');
+}
+
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

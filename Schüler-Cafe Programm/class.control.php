@@ -10,6 +10,7 @@ var $viewData; // array
 var $input; // array --> GET and POST
 // vars for the the different sections of the shop
 var $magazine;
+var $shop;
 var $users;
 var $settings;
 
@@ -84,41 +85,53 @@ public function handleInput($input){
         $template = "Templates/main.php";
         break;
       case "open_shop":
-        $template = "Templates/shop.php";
-        echo "<br><br>open_shop<br>";
-        $products = $this->model->getSpecificData('SELECT `ID`, `product`, `amount`, `price` FROM `magazine`');
-        $this->shop = new Shop($this->input,$products);
-        if(isset($this->shop->return)){
-          $this->viewData = $this->shop->return;
-        }
-        // this is necessary to send the information from the shop class to the view class / template
-        if(isset($input['finishtrans']) ){
-          //lese JSON String aus cart
-          //vervollständige Einkauf (Methode in Shop)
-          //$this->shop->finishTransaction();
-        }
-        /*
-        if(isset($this->shop->db_return['action'])){
-          switch ($this->shop->db_return['action']){
-            case "delete":
-              if(isset($this->shop->db_return['delete'])){
+      // get data from all products from db
+      $productList = $this->model->getSpecificData('SELECT `ID`, `product`, `price`, `amount`, `category_ID`, `refill` FROM `magazine`');
+      $categories = $this->model->getSpecificData('SELECT `ID`, `category`, `describtion` FROM `categories_products`');
 
+      $this->shop = new Shop($this->input,$productList,$this->settings->settings, $categories);
+
+      // this is necessary to send the information from the Magazine class to the view class / template
+      if(isset($this->shop->return)){
+        $this->viewData = $this->shop->return;
+      } // end if
+
+
+      // query by Magazine class to write sth into db
+      if(isset($this->shop->db_return['action'])){
+        switch ($this->shop->db_return['action']){
+          case "delete": // deletes a product
+            if(isset($this->shop->db_return['delete'])){
+
+              // if there is sent a delete query it is executed
               $this->model->deleteData($this->shop->db_return['delete']);
 
-              ?>
-              <!-- this reloads the page so that the change can be seen in the html output -->
-              <!DOCTYPE html>
-              <html>
-                <script type="text/javascript">
-                  location.replace("http://susocafe.bplaced.net/index.php?action=open_shop");
-                </script>
-              </html>
-              <?php
-              die();
-            }  // end if inner
-          } // end switch
-        } // ebd outer if
-        */
+              $this->locationReplace("action=open_shop");
+            }  // end if
+            break;
+          case "edit": // edits a product
+          echo "edit <br><br>";
+            if(isset($this->shop->db_return['edit'])){
+
+              // if there is sent an edit query it is executed
+              $this->model->editData($this->shop->db_return['edit']);
+              $this->locationReplace("action=open_shop");
+            } // end if
+            break;
+          case "add": // adds a product
+          // echo "add <br><br>";
+            if(isset($this->shop->db_return['add'])){
+              // var_dump($this->magazine->db_return['add']);
+              $this->model->addData($this->shop->db_return['add']);
+              $this->locationReplace("action=open_shop");
+            }
+            break;
+          default:
+
+        } // end switch
+      } // end if
+
+      $template = "Templates/shop.php";
         break;
       // case "edit":
       //     break;

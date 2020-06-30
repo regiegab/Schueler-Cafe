@@ -1,110 +1,59 @@
 <?php
 
-class shop{
+class Shop{
 
   // vars
-
-
-
   var $mInput; // Array
-
+  var $db_return; // Array
   var $return; // Array
 
-  var $products; //Array
-
-  var $db_return; // Array
-
-  var $cartContent; //Array
-
-
+  var $products; //Array: a list of all the products
+  var $settings; // Array with all the settings imported from db
+  var $categories; //Array: a list of all the categories
 
   // functions
 
   //constructor
-
-  public function __construct($input_from_control,$products){
-
+  public function __construct($input_from_control,$products,$settings,$categories){
     echo "<br><br>Successfully opened \"class.shop.php\"";
 
+    $this->settings = $settings;
     $this->products = $products;
-
+    $this->categories = $categories;
     $this->$mInput = $input_from_control;
 
-    // var_dump($this->products);
-
     $this->handleInput($this->$mInput);
-
   }
 
   //other functions
 
+  /**
+    * processes the input from the control class
+    * @param Array input
+    */
   private function handleInput($input){
-
-
 
     // switch to do different actions
 
-
-
-
-
     switch ($input['shop']){
-
       case 'buy':
 
-          $this->addToCart($input['product']);
-
-        break;
-
+      break;
       case 'delete':
 
-
-
       break;
-
-
-
-      case "test":
-
-        $this->return['test'] = "<br>   test successful<br>";
-
-      break;
-
       default:
-
-      $this->cartContent = "cart";
-
-      $this->openCart($this->cartContent);
-
-      $this->displayProducts($this->products);
+      $this->default();
 
     }//end switch
 
   }// end handleInput()
 
-  public function displayProducts($products){
-
-    $this->return['products'] = $products;
-
-  }
-
-
-
-  public function openCart($cartContent){
-
-    if (isset($cartContent)) {
-
-
-
-      $this->return['cart'] = $cartContent;
-
-      echo $cartContent;
-
-    }
-
+  public function default(){
+    $this->return['productList'] = $this->products;
+    $this->return['categoryList'] = $this->categories;
   }
 
 
 }
-
 ?>

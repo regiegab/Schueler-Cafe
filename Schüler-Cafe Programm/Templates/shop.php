@@ -13,44 +13,153 @@
       <br>
       here the text of the shop template begins
       <br>
-    </div>
-
-    <div id="categories_overview">
-
-    </div>
-
-    <div id="allProducts">
-
-    </div>
-
-
-    <div id="cart">
-      <h2>Einkaufswagen</h2>
       <?php
-      echo "<table style=overflow-x:auto;>
+        echo "<br><br>ProductList:<br>";
+        var_dump($this->data['productList']);
+        echo "<br>";
+        echo "<br>";
+        var_dump($this->data['categoryList']);
+        echo "<br><br>";
+       ?>
+    </div>
+
+    <div id="categories_overview" style="display:inline">
+      <h2>Kategorien</h2>
+      <button id="category_all" onclick="openCategory('all')">Alles Anzeigen</button>
+      <?php
+        if(isset($this->data['categoryList']) && isset($this->data['productList'])){
+
+          $products = $this->data['productList'];
+          $categories = $this->data['categoryList'];
+          foreach ($categories as $key => $value) {
+            echo "<button id=\"category_$value[0]\" onclick=\"openCategory($value[0])\">$value[1]</button>";
+          } // end foreach
+
+
+          foreach ($categories as $key => $valueCategories) {
+            echo "  <div id=\"items_category_$valueCategories[0]\" style=\"display:none\">";
+
+            echo "<h3>$valueCategories[1]</h3>";
+
+            echo "<table style=overflow-x:auto;>
+                    <tr>
+                      <th>ID</th>
+                      <th>Produkt</th>
+                      <th>Kategorie</th>
+                      <th>Anzahl</th>
+                      <th>Preis</th>
+                      <th><button onclick=\"closeCategory($valueCategories[0])\">Schließen</button></th>
+                    </tr>";
+
+            foreach ($products as $key => $valueProducts) {
+              if($valueProducts[4] == $valueCategories[0]){
+                $id = $valueProducts[0];
+                $product = $valueProducts[1];
+                $price = $valueProducts[2];
+                $amount = $valueProducts[3];
+                $category_Id = $valueProducts[4];
+
+                // --> display category name instead of its id
+                $category_name = null;
+                if(isset($this->data['categoryList'])){
+                  $category_name = $this->data['categoryList'][$category_Id][1];
+
+                } // end if
+
+                echo "  <tr>
+                          <td> $id </td>
+                          <td> $product </td>
+                          <td> $category_name </td>
+                          <td> $amount </td>
+                          <td> $price </td>
+                          <td> <button onclick='addToCart($id,\"$product\",\"$category_name\",$price)'>Zum Einkaufswagen hinzufügen</button> </td>
+                        </tr>";
+              } // end if
+            } // end foreach
+            echo" </table><br><br>";
+            echo "  </div>";
+
+          } // end foreach
+
+        } // end if
+      ?>
+    </div>
+
+    <div id="items_category_all" style="display:none">
+      <ul style="list-style-type:none">
+        <?php
+        if(isset($this->data['productList'])){
+          echo "<div>
+                <h3>Alle Produkte</h3>
+                <table style=overflow-x:auto;>
+                  <tr>
+                    <th>ID</th>
+                    <th>Produkt</th>
+                    <th>Kategorie</th>
+                    <th>Anzahl</th>
+                    <th>Preis</th>
+                    <th><button onclick=\"closeCategory('all')\">Schließen</button></th>
+                  </tr>";
+          foreach ($this->data['productList'] as $value) {
+            // var_dump($value);
+            $id = $value[0];
+            $product = $value[1];
+            $price = $value[2];
+            $amount = $value[3];
+            $category_Id = $value[4];
+
+            // echo "<br><br>";
+            // var_dump($this->data['categoryList']);
+            // echo "<br>";
+
+            // --> display category name instead of its id
+            $category_name = null;
+            if(isset($this->data['categoryList'])){
+              $category_name = $this->data['categoryList'][$category_Id][1];
+              // echo "<br>";
+              // var_dump($category_name);
+              // echo "<br>";
+            } // end if
+
+
+            //echo "<div><table>$id.$product.$amount.$price.</table></div>";
+            //echo "<br>";
+            // echo implode(" ",$value);
+            echo "  <tr>
+                      <td> $id </td>
+                      <td> $product </td>
+                      <td> $category_name </td>
+                      <td> $amount </td>
+                      <td> $price </td>
+                      <td> <button onclick='addToCart($id,\"$product\",\"$category_name\",$price)'>Zum Einkaufswagen hinzufügen</button> </td>
+                    </tr>";
+          } // end foreach
+
+          echo" </table><br><br>
+                </div>";
+        } // end if
+        ?>
+
+      </ul>
+    </div>
+
+
+    <div id="cart" style="display:none">
+
+      <br><h2>Einkaufswagen</h2>
+
+      <table style="overflow-x:auto;" id="cart_container">
         <tr>
           <th>ID</th>
           <th>Produkt</th>
           <th>Kategorie</th>
           <th>Anzahl</th>
-          <th>Preis pro Stück</th>
-          <th>Preis gesamt</th>
-          <th></th>
+          <th>Preis</th>
+          <th><button onclick="closeCart()">Einkaufswagen schließen</button><button onclick="clearCart()">Einkaufswagen leeren</button></th>
         </tr>
-        <tr>
-          <td> $ </td>
-          <td> $ </td>
-          <td> $ </td>
-          <td> $ </td>
-          <td> $ </td>
-          <td> $ </td>
-          <td> <button onclick=\"\">Entfernen</button> </td>
-        </tr>";
-       ?>
-       <br><br>
+      </table>
 
     </div>
-
 
     <!-- test div -->
     <div style="color:green;">
@@ -64,7 +173,86 @@
 
   </body>
 
-    <script type="application/javascript">
+  <script type="application/javascript">
 
-    </script>
+    function addToCart(id, product_name, category, price){
+      document.getElementById('cart').style.display = "inline";
+
+      var amount;
+
+      // check wether the product is already in the cart
+      // true --> amount++
+      // false --> make a new entry
+      var checkCartForProduct_id = id + "_cart";
+      var checkCartForProduct_element = document.getElementById(checkCartForProduct_id);
+      if(checkCartForProduct_element != null) {
+        if (document.getElementById(checkCartForProduct_id).innerHTML != "") {
+          var product_amount_id = id + "_cart_amount";
+          amount = parseInt(document.getElementById(product_amount_id).innerHTML);
+          amount++;
+          // console.log("Amount:"+amount);
+          var totalPrice = parseFloat(price) * amount;
+          // console.log("totalPrice:"+totalPrice);
+          // console.log(document.getElementById(checkCartForProduct_id).innerHTML);
+          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">"+amount+"</lo></td><td>"+totalPrice+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
+        } else{
+          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
+        } // end if 2
+      }else{
+        var newItem = "<tr id=\""+id+"_cart\"><td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td></tr>";
+        console.log(newItem);
+        var cart = document.getElementById('cart_container').innerHTML;
+        cart += newItem;
+        document.getElementById('cart_container').innerHTML = cart;
+      } // end if 1
+
+      // var amount = parseInt(1);
+      //
+      // var count;
+      //
+      // var myElement_value;
+      // var amountId = "amount_cartItem_"+id;
+      // var myElement = document.getElementById(amountId);
+      // if(myElement != null){
+      //   myElement_value = parseFloat(document.getElementById(amountId).innerHTML);
+      //   amount += myElement_value;
+      //
+      //   countEle = document.getElementsByClassName("amountClass");
+      //   count = countEle.length;
+      //   amount += count;
+      // }
+      //
+      // console.log(amount);
+      // var newItem = "<tr><td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo class=\"amountClass\" id=\"amount_cartItem_"+id+"\">"+amount+"</lo></td><td><lo id=\"price_cartItem_"+id+"\">"+price+"</lo></td></tr>";
+      // console.log(newItem);
+      //
+      // var cart = document.getElementById('cart_container').innerHTML;
+      // cart += newItem;
+    } // end addToCart
+
+    function deleteFromCart(id){
+      var checkCartForProduct_id = id + "_cart";
+      document.getElementById(checkCartForProduct_id).innerHTML = "";
+    } // end deleteFromCart
+
+    function closeCart(){
+      document.getElementById('cart').style.display = "none";
+    } // end closeCart
+
+    function clearCart(){
+      var clearedCartText = "<tr><th>ID</th><th>Produkt</th><th>Kategorie</th><th>Anzahl</th><th>Preis</th><th><button onclick=\"closeCart()\">Einkaufswagen schließen</button><button onclick=\"clearCart()\">Einkaufswagen leeren</button></th></tr>";
+      document.getElementById('cart_container').innerHTML = clearedCartText;
+    } // end clearCart
+
+    function openCategory(categoryId){
+      var id = 'items_category_'+categoryId;
+      document.getElementById(id).style.display = "inline";
+    } // end openCategory
+
+    function closeCategory(categoryId){
+      var id = 'items_category_'+categoryId;
+      document.getElementById(id).style.display = "none";
+    } // end closeCategory
+
+  </script>
 </html>

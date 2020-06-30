@@ -180,9 +180,9 @@ class Users{
 
       $query = $query.' WHERE `ID` = '.$user;
 
-      $this->db_return['action'] = "edit";
-      $this->db_return['edit'] = $query;
-      // var_dump($query);
+      // $this->db_return['action'] = "edit";
+      // $this->db_return['edit'] = $query;
+      var_dump($query);
     } else {
       $this->permissionInsufficient();
     }

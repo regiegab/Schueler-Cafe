@@ -1,10 +1,11 @@
 <?php
+//include("Schüler-Cafe Programm\class.control.php");
 echo "opened magazine";
-if($this->control->checkLoginState() == true){
- echo "session has not expired yet";
-}else{
- echo "session expired";
-}
+// if($this->control->checkLoginState() == true){
+//  echo "session has not expired yet";
+// }else{
+//  echo "session expired";
+// }
 function magazine($input){
 
 
@@ -27,6 +28,8 @@ function magazine($input){
     default:
   } // end switch
 
+
+  $template = "Templates\magazine.php";
  }
 
 ?>
