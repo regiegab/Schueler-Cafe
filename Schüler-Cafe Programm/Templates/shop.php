@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Shop</title>
-  </head>
-  <body>
-    <!-- test div -->
-    <div style="color:green;">
-      <br>
-      <br>
-      <br>
-      <br>
-      here the text of the shop template begins
-      <br>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Shop</title>
+  </head>
+  <body>
+    <!-- test div -->
+    <div style="color:green;">
+      <br>
+      <br>
+      <br>
+      <br>
+      here the text of the shop template begins
+      <br>
       <?php
         echo "<br><br>ProductList:<br>";
         var_dump($this->data['productList']);
@@ -154,10 +154,16 @@
           <th>Produkt</th>
           <th>Kategorie</th>
           <th>Anzahl</th>
-          <th>Preis</th>
+          <th>Preis pro Stück</th>
+          <th>Gesamtpreis</th>
           <th><button onclick="closeCart()">Einkaufswagen schließen</button><button onclick="clearCart()">Einkaufswagen leeren</button></th>
         </tr>
       </table>
+
+      <!-- the IDs of all products in the cart are saved here -->
+      <a id="cart_Ids" style="display:none"></a>
+
+      Summe: <a id="cart_sum">0</a>
 
     </div>
 
@@ -173,7 +179,7 @@
 
   </body>
 
-  <script type="application/javascript">
+  <script type="application/javascript">
 
     function addToCart(id, product_name, category, price){
       document.getElementById('cart').style.display = "inline";
@@ -194,45 +200,61 @@
           var totalPrice = parseFloat(price) * amount;
           // console.log("totalPrice:"+totalPrice);
           // console.log(document.getElementById(checkCartForProduct_id).innerHTML);
-          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">"+amount+"</lo></td><td>"+totalPrice+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
+          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">"+amount+"</lo></td><td>"+price+"</td><td><lo id=\""+id+"_cart_totalPrice\">"+totalPrice+"</lo></td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
         } else{
-          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
+          document.getElementById(checkCartForProduct_id).innerHTML = "<td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><lo id=\""+id+"_cart_totalPrice\">"+price+"</lo></td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td>";
         } // end if 2
       }else{
-        var newItem = "<tr id=\""+id+"_cart\"><td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td></tr>";
+        var newItem = "<tr id=\""+id+"_cart\"><td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo id=\""+id+"_cart_amount\">1</lo></td><td>"+price+"</td><td><lo id=\""+id+"_cart_totalPrice\">"+price+"</lo></td><td><button onclick=\"deleteFromCart("+id+")\">Entfernen</button></td></tr>";
         console.log(newItem);
         var cart = document.getElementById('cart_container').innerHTML;
         cart += newItem;
         document.getElementById('cart_container').innerHTML = cart;
       } // end if 1
 
-      // var amount = parseInt(1);
-      //
-      // var count;
-      //
-      // var myElement_value;
-      // var amountId = "amount_cartItem_"+id;
-      // var myElement = document.getElementById(amountId);
-      // if(myElement != null){
-      //   myElement_value = parseFloat(document.getElementById(amountId).innerHTML);
-      //   amount += myElement_value;
-      //
-      //   countEle = document.getElementsByClassName("amountClass");
-      //   count = countEle.length;
-      //   amount += count;
-      // }
-      //
-      // console.log(amount);
-      // var newItem = "<tr><td>"+id+"</td><td>"+product_name+"</td><td>"+category+"</td><td><lo class=\"amountClass\" id=\"amount_cartItem_"+id+"\">"+amount+"</lo></td><td><lo id=\"price_cartItem_"+id+"\">"+price+"</lo></td></tr>";
-      // console.log(newItem);
-      //
-      // var cart = document.getElementById('cart_container').innerHTML;
-      // cart += newItem;
+      var addIdToArray = id + "_cart_totalPrice";
+      cartSum("add", addIdToArray);
+
     } // end addToCart
 
+    function cartSum(action, id){
+      // saves the ids of all products of the cart
+      var ids_string = document.getElementById('cart_Ids').innerHTML;
+      var ids_array = ids_string.split(',');
+
+      if(action == "add"){
+        // check whether the id is already in the array
+        if(ids_array.includes(id) == false) {
+          ids_array.push(id);
+        } // end if 2
+      } // end if 1
+
+      if(action == "clear"){
+        document.getElementById('cart_Ids').innerHTML = "";
+      }else{
+        document.getElementById('cart_Ids').innerHTML = ids_array;
+      } // end if
+
+      // display sum of all total prices
+      var sum = 0;
+      // ids_array.forEach(myFunction);
+      ids_array.forEach((item, index) => {
+        if(document.getElementById(item) != null){
+          // console.log("item:"+item);
+          // console.log("idex:"+index);
+          // console.log(document.getElementById(item).innerHTML);
+          sum += parseFloat(document.getElementById(item).innerHTML);
+        } // end if
+      });
+      document.getElementById('cart_sum').innerHTML = sum;
+    } // end cartSum
+
     function deleteFromCart(id){
-      var checkCartForProduct_id = id + "_cart";
-      document.getElementById(checkCartForProduct_id).innerHTML = "";
+      var product_id = id + "_cart";
+      document.getElementById(product_id).innerHTML = "";
+      var sum_product_id = product_id + "_totalPrice";
+      cartSum("subtract", sum_product_id);
+
     } // end deleteFromCart
 
     function closeCart(){
@@ -240,8 +262,9 @@
     } // end closeCart
 
     function clearCart(){
-      var clearedCartText = "<tr><th>ID</th><th>Produkt</th><th>Kategorie</th><th>Anzahl</th><th>Preis</th><th><button onclick=\"closeCart()\">Einkaufswagen schließen</button><button onclick=\"clearCart()\">Einkaufswagen leeren</button></th></tr>";
+      var clearedCartText = "<tr><th>ID</th><th>Produkt</th><th>Kategorie</th><th>Anzahl</th><th>Preis pro Stück</th><th>Gesamtpreis</th><th><button onclick=\"closeCart()\">Einkaufswagen schließen</button><button onclick=\"clearCart()\">Einkaufswagen leeren</button></th></tr>";
       document.getElementById('cart_container').innerHTML = clearedCartText;
+      cartSum("clear", null);
     } // end clearCart
 
     function openCategory(categoryId){
@@ -254,5 +277,5 @@
       document.getElementById(id).style.display = "none";
     } // end closeCategory
 
-  </script>
-</html>
+  </script>
+</html>
