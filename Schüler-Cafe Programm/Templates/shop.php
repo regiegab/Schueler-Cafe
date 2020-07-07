@@ -163,7 +163,9 @@
       <!-- the IDs of all products in the cart are saved here -->
       <a id="cart_Ids" style="display:none"></a>
 
-      Summe: <a id="cart_sum">0</a>
+
+      <br><a style=""></a>Summe: <aa id="cart_sum">0</aa></a> <button onclick="buy()">Kaufen</button>
+
 
     </div>
 
@@ -212,13 +214,14 @@
         document.getElementById('cart_container').innerHTML = cart;
       } // end if 1
 
-      var addIdToArray = id + "_cart_totalPrice";
+      // var addIdToArray = id + "_cart_totalPrice";
+      var addIdToArray = id + "_cart";
       cartSum("add", addIdToArray);
 
     } // end addToCart
 
     function cartSum(action, id){
-      // saves the ids of all products of the cart
+      // saves the ids of all products (the id of their individual total price) of the cart
       var ids_string = document.getElementById('cart_Ids').innerHTML;
       var ids_array = ids_string.split(',');
 
@@ -228,6 +231,14 @@
           ids_array.push(id);
         } // end if 2
       } // end if 1
+
+      if(action == "remove"){
+        ids_array = ids_array.filter(
+          (item) => {
+            return item != id;
+          }
+        );
+      } // end if
 
       if(action == "clear"){
         document.getElementById('cart_Ids').innerHTML = "";
@@ -239,11 +250,12 @@
       var sum = 0;
       // ids_array.forEach(myFunction);
       ids_array.forEach((item, index) => {
-        if(document.getElementById(item) != null){
+        var id_totalPrice = item + "_totalPrice";
+        if(document.getElementById(id_totalPrice) != null){
           // console.log("item:"+item);
           // console.log("idex:"+index);
           // console.log(document.getElementById(item).innerHTML);
-          sum += parseFloat(document.getElementById(item).innerHTML);
+          sum += parseFloat(document.getElementById(id_totalPrice).innerHTML);
         } // end if
       });
       document.getElementById('cart_sum').innerHTML = sum;
@@ -252,8 +264,9 @@
     function deleteFromCart(id){
       var product_id = id + "_cart";
       document.getElementById(product_id).innerHTML = "";
-      var sum_product_id = product_id + "_totalPrice";
-      cartSum("subtract", sum_product_id);
+      // var sum_product_id = product_id + "_totalPrice";
+      // cartSum("remove", sum_product_id);
+      cartSum("remove", product_id);
 
     } // end deleteFromCart
 
@@ -276,6 +289,44 @@
       var id = 'items_category_'+categoryId;
       document.getElementById(id).style.display = "none";
     } // end closeCategory
+
+    function buy(){
+      var ids_string = document.getElementById('cart_Ids').innerHTML;
+      var ids_array = ids_string.split(',');
+      if(ids_array[0] == ""){
+        ids_array.splice(0,1);
+      } // end if
+      var sum = parseFloat(document.getElementById('cart_sum').innerHTML);
+      var cartItems_array = [];
+      var time = "now";
+
+      if(confirm("Bitte bezahlen Sie "+sum+" Euro.")){
+
+        ids_array.forEach((id, index) => {
+          var id_product = parseInt(id);
+          var id_amount = id + "_amount";
+          if(document.getElementById(id) != null && document.getElementById(id_amount) != null && sum != 0){
+            var product_amount = parseInt(document.getElementById(id_amount).innerHTML);
+            console.log("id:"+id+" | amount:"+product_amount+" | sum:"+sum);
+            var current_product = [id_product, product_amount];
+            cartItems_array.push(current_product);
+            // alert("kein Fehler!");
+          }else{
+            // alert("Fehler!");
+          } // end if 2
+
+        }); // end foreach
+
+        var cartItems_json_string = JSON.stringify(cartItems_array);
+        console.log(cartItems_json_string);
+
+        console.log("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum+"&time="+time);
+        location.replace("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum+"&time="+time);
+
+      }else{
+        alert("Kaufvorgang abgebrochen!");
+      } // end if 1
+    } // end buy
 
   </script>
 </html>

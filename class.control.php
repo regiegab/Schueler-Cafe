@@ -97,34 +97,19 @@ public function handleInput($input){
       } // end if
 
 
-      // query by Magazine class to write sth into db
+      // query by Shop class to write sth into db
       if(isset($this->shop->db_return['action'])){
         switch ($this->shop->db_return['action']){
-          case "delete": // deletes a product
-            if(isset($this->shop->db_return['delete'])){
-
-              // if there is sent a delete query it is executed
-              $this->model->deleteData($this->shop->db_return['delete']);
-
-              $this->locationReplace("action=open_shop");
-            }  // end if
-            break;
-          case "edit": // edits a product
-          echo "edit <br><br>";
-            if(isset($this->shop->db_return['edit'])){
-
-              // if there is sent an edit query it is executed
-              $this->model->editData($this->shop->db_return['edit']);
-              $this->locationReplace("action=open_shop");
-            } // end if
-            break;
           case "add": // adds a product
           // echo "add <br><br>";
             if(isset($this->shop->db_return['add'])){
-              // var_dump($this->magazine->db_return['add']);
+              // DEBUG:
+              echo "<br><br>";
+              var_dump($this->shop->db_return['add']);
               $this->model->addData($this->shop->db_return['add']);
-              $this->locationReplace("action=open_shop");
-            }
+              die();
+              // $this->locationReplace("action=open_shop");
+            } // end if
             break;
           default:
 

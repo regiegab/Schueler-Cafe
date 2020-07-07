@@ -37,10 +37,10 @@ class Shop{
 
     switch ($input['shop']){
       case 'buy':
-
-      break;
-      case 'delete':
-
+      var_dump($input['cart_items']);
+      var_dump($input['sum']);
+      var_dump($input['time']);
+      $this->processOrder($input['cart_items'],$input['sum'],$input['time']);
       break;
       default:
       $this->default();
@@ -49,9 +49,78 @@ class Shop{
 
   }// end handleInput()
 
-  public function default(){
+  private function default(){
     $this->return['productList'] = $this->products;
     $this->return['categoryList'] = $this->categories;
+  } // end default
+
+  /**
+    * function adds a new product to db
+    * @param String product_name
+    * @param String category
+    * @param String amount
+    * @param String price
+    * @param String refill
+    */
+  private function processOrder($cart_items_string,$sum,$time){
+    $role_needed = $this->settings['shop_minimumRoleBuy'];
+    if($this->compareRole($role_needed)){
+      echo "<br>buy product<br>".$cart_items_string.$sum.$time."<br>";
+      $cart_items_array = json_decode($cart_items_string);
+      var_dump($cart_items_array);
+
+      $this->db_return['action'] = "add";
+      $this->db_return['add'] = 'INSERT INTO `purchases`(`cartContents`, `sum`) VALUES (\''.$cart_items_string.'\',\''.$sum.'\')';
+    } else {
+      $this->permissionInsufficient();
+    }
+  } // end processOrder
+
+
+  /**
+    * function to compare necessary role status with user
+    * returns true if role status is high enough
+    * @param int role_needed
+    */
+  private function compareRole($role_needed){
+    if ($role_needed <= $_SESSION['role']) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // if the permission of the acting user is insufficient an error message will be displayed and the default userInterface will be displayed
+  private function permissionInsufficient(){
+    $this->alert("You do not have the permission to do that!");
+    ?>
+    <!-- this reloads the page so that the change can be seen in the html output -->
+    <!DOCTYPE html>
+    <html>
+      <script type="text/javascript">
+        location.replace("index.php?action=open_magazine");
+      </script>
+    </html>
+    <?php
+  }
+
+  /**
+    * function to send an alert (HTML)
+    * @param String message
+    */
+  private function alert($message){
+    ?><!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+
+      </body>
+      <script type="text/javascript">
+        alert("<?php echo $message; ?>");
+      </script>
+    </html>
+    <?php
   }
 
 
