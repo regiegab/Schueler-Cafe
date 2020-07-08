@@ -98,22 +98,43 @@ public function handleInput($input){
 
 
       // query by Shop class to write sth into db
-      if(isset($this->shop->db_return['action'])){
-        switch ($this->shop->db_return['action']){
-          case "add": // adds a product
+      if(isset($this->shop->db_return['action1']) && isset($this->shop->db_return['action2'])){
+        switch ($this->shop->db_return['action1']){
+          case "add": // logs the purchase
           // echo "add <br><br>";
             if(isset($this->shop->db_return['add'])){
               // DEBUG:
               echo "<br><br>";
               var_dump($this->shop->db_return['add']);
               $this->model->addData($this->shop->db_return['add']);
-              die();
+              // die();
               // $this->locationReplace("action=open_shop");
             } // end if
             break;
           default:
 
         } // end switch
+
+        switch ($this->shop->db_return['action2']){
+          case "process": // logs the purchase
+          // echo "add <br><br>";
+            if(isset($this->shop->db_return['process'])){
+              // DEBUG:
+              echo "<br><br>ControlQuery:<br>";
+              var_dump($this->shop->db_return['process']);
+              // $this->model->editData($this->shop->db_return['process']);
+              foreach ($this->shop->db_return['process'] as $key => $value) {
+                $this->model->editData($value);
+              }
+              // die();
+            } // end if
+            break;
+          default:
+
+        } // end switch
+
+        // $this->locationReplace("action=open_shop");
+
       } // end if
 
       $template = "Templates/shop.php";

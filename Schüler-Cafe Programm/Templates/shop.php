@@ -298,7 +298,7 @@
       } // end if
       var sum = parseFloat(document.getElementById('cart_sum').innerHTML);
       var cartItems_array = [];
-      var time = "now";
+      // var time = "now";
 
       if(confirm("Bitte bezahlen Sie "+sum+" Euro.")){
 
@@ -320,8 +320,8 @@
         var cartItems_json_string = JSON.stringify(cartItems_array);
         console.log(cartItems_json_string);
 
-        console.log("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum+"&time="+time);
-        location.replace("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum+"&time="+time);
+        console.log("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum);
+        location.replace("index.php?action=open_shop&shop=buy&cart_items="+cartItems_json_string+"&sum="+sum);
 
       }else{
         alert("Kaufvorgang abgebrochen!");
