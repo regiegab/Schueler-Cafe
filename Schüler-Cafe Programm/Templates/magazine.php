@@ -78,7 +78,12 @@
             // --> display category name instead of its id
             $category_name = null;
             if(isset($this->data['categoryList'])){
-              $category_name = $this->data['categoryList'][$category_Id][1];
+              foreach ($this->data['categoryList'] as $key => $value1) {
+                if($category_Id == $this->data['categoryList'][$key][0]){
+                  $category_name = $this->data['categoryList'][$key][1];
+                } // end if
+              } // end foreach
+
               // echo "<br>";
               // var_dump($category_name);
               // echo "<br>";
@@ -107,7 +112,10 @@
 
       </ul>
 
-      <button type="button" onclick="openAdd()">Add Product</button><br>
+      <button type="button" onclick="openAdd()">Add Product</button>
+      <button type="button" onclick="document.getElementById('category_list').style.display = 'inline'">Show categories</button>
+      <button type="button" onclick="document.getElementById('category_list').style.display = 'none'">Hide categories</button><br>
+
       <lo id="addField" style="display:none">
         <h2>Add Product</h2><br>
         <form>
@@ -131,17 +139,113 @@
       </lo><br><br>
     </div>
 
+
+
+
+    <div id="category_list" style="display:none">
+
+      <lo id="editField_category" style="display:none">
+        <h2>Edit</h2><br>
+        <a id="category_edit_memory" style="display:inline"></a>:
+        <!-- in the <a></a> the productId is saved -->
+        <form><a id="categoryId" style="display:none"></a>
+          <input type="text" id="edit_name_category" placeholder="neue Kategoriebezeichnung">
+          <input type="text" id="edit_describtion_category" placeholder="neue Kategoriebeschreibung">
+          <input type ="button" onclick="editCategory()" value="Submit">
+          <input type ="button" onclick="document.getElementById('editField_category').style.display = 'none'" value="cancel">
+        </form>
+      </lo>
+
+      <?php
+      if(isset($this->data['categoryList'])){
+        echo "<div>
+              <table style=overflow-x:auto;>
+                <tr>
+                  <th>Kategoriebezeichnung</th>
+                  <th>Beschreibung</th>
+                </tr>";
+        foreach ($this->data['categoryList'] as $category_Id => $value) {
+          // var_dump($value);
+          $category_Id = $value[0];
+          $category_name = $value[1];
+          $describtion = $value[2];
+
+          //echo "<div><table>$id.$product.$amount.$price.</table></div>";
+          //echo "<br>";
+          // echo implode(" ",$value);
+          echo "  <tr>
+                    <td> $category_name </td>
+                    <td> $describtion </td>
+                    <td> <button onclick='deleteCategory($category_Id, \"$category_name\")'>Löschen</button> </td>
+                    <td> <button onclick='openEditCategory($category_Id, \"$category_name\")'>Kategorie bearbeiten</button> </td>
+                  </tr>";
+        } // end foreach
+
+        echo" </table>
+              </div>";
+      } // end if
+      ?>
+
+      <button type="button" onclick="openAddCategory()">Add Category</button>
+      Hinweis: Es können nur Kategorien gelöscht werden, die von keinem Produkt mehr benutzt werden!<br>
+
+      <lo id="addFieldCategory" style="display:none">
+        <h2>Add Category</h2><br>
+        <form>
+          <input type="text" id="add_name_category" placeholder="Kategoriebezeichnung">
+          <input type="text" id="add_describtion_category" placeholder="Beschreibung">
+          <input type ="button" onclick="addCategory()" value="Submit">
+          <input type ="button" onclick="document.getElementById('addFieldCategory').style.display = 'none'" value="cancel">
+        </form>
+      </lo><br><br>
+    </div>
+
   </body>
 
   <script type="text/javascript">
 
+    function deleteCategory(category_Id, category_name){
+      if(confirm("Do you really want to delete this category \""+category_name+"\"?")){
+        // console.log("index.php?action=open_magazine&magazine=removeProduct&productId="+productId);
+        location.replace("index.php?action=open_magazine&magazine=removeCategory&category_Id="+category_Id);
+      } // end if
+    } // end deleteCategory
+
+    function openEditCategory(category_Id, category_name){
+      document.getElementById('categoryId').innerHTML = category_Id;
+      document.getElementById('category_edit_memory').innerHTML = category_name;
+      document.getElementById('editField_category').style.display = "inline";
+    } // end deleteCategory
+
+    function openAddCategory(){
+      document.getElementById('addFieldCategory').style.display = "inline";
+    } // end openAddCategory
+
+    function addCategory(){
+      var category_name = document.getElementById('add_name_category').value;
+      var describtion = document.getElementById('add_describtion_category').value;
+
+      location.replace("index.php?action=open_magazine&magazine=addCategory&category_name="+category_name+"&describtion="+describtion);
+    } // end deleteCategory
+
+    function editCategory(){
+      var categoryId = document.getElementById('categoryId').innerHTML;
+      var category_name = document.getElementById('edit_name_category').value;
+      var describtion = document.getElementById('edit_describtion_category').value;
+      location.replace("index.php?action=open_magazine&magazine=editCategory&categoryId="+categoryId+"&category_name="+category_name+"&describtion="+describtion);
+    } // end editCategory
+
+
+
+
+
     function openAdd(){
       document.getElementById('addField').style.display = "inline";
-    }
+    } // end openAdd
 
     function hideAdd(){
       document.getElementById('addField').style.display = 'none';
-    }
+    } // end hideAdd
 
     // transmitts the data for the new product to the class.magazine.php script
     function addProduct(){
@@ -158,14 +262,14 @@
 
       // console.log("index.php?action=open_magazine&magazine=addProduct&product_name="+product_name+"&category="+category+"&amount="+amount+"&price="+price+"&refill="+refill);
       location.replace("index.php?action=open_magazine&magazine=addProduct&product_name="+product_name+"&category="+category+"&amount="+amount+"&price="+price+"&refill="+refill);
-    }
+    } // end addProduct
 
     function deleteProduct(productId,product_name){
       if(confirm("Do you really want to delete the product \""+product_name+"\"?")){
         // console.log("index.php?action=open_magazine&magazine=removeProduct&productId="+productId);
         location.replace("index.php?action=open_magazine&magazine=removeProduct&productId="+productId);
-      }
-    }
+      } // end if
+    } // end deleteProduct
 
     // dislplays the edit form
     function openEdit(productId,product_name){
@@ -196,7 +300,7 @@
 
       // console.log("index.php?action=open_magazine&magazine=editProduct&productId="+productId+"product_name="+product_name+"&category="+category+"&amount="+amount+"&price="+price+"&refill="+refill);
       location.replace("index.php?action=open_magazine&magazine=editProduct&productId="+productId+"&product_name="+product_name+"&category="+category+"&amount="+amount+"&price="+price+"&refill="+refill);
-    }
+    } // end editProduct
 
   </script>
 

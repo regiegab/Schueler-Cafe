@@ -18,6 +18,9 @@ class Settings{
           'magazine_minimumRoleAdd' => 2, // the minimum role you need to have in order to add a product entry to db
           'magazine_minimumRoleEdit' => 2, // the minimum role you need to have in order to edit a product entry in db
           'shop_minimumRoleBuy' => 2, // the minimum role you need to have in order to buy a product
+          'magazine_minimumRoleDeleteCategory' => 2, // the minimum role you need to have in order to delete a category
+          'magazine_minimumRoleAddCategory' => 2, // the minimum role you need to have in order to add a category
+          'magazine_minimumRoleEditCategory' => 2, // the minimum role you need to have in order to edit a category
         ];
 
   public function __construct($input_from_control,$settingsList){

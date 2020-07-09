@@ -51,9 +51,21 @@ class Magazine{
         ];
         $this->editProduct($input['productId'],$parameters);
         break;
-        // case "test":
-        //   $this->return['test'] = "<br>   test successful<br>";
-        // break;
+
+        case "addCategory":
+          $this->addCategory($input['category_name'],$input['describtion']);
+        break;
+        case 'removeCategory':
+          $this->removeCategory($input['category_Id']);
+        break;
+        case 'editCategory':
+        $parameters = [
+          'category' => $input['category_name'],
+          'describtion' => $input['describtion'],
+        ];
+        $this->editCategory($input['categoryId'],$parameters);
+        break;
+
         default:
         $this->displayProducts();
       }//end switch
@@ -62,6 +74,66 @@ class Magazine{
     } // end if
   } // end handleInput()
 
+  /**
+    * function adds a new product to db
+    * @param String product_name
+    * @param String category
+    * @param String amount
+    * @param String price
+    * @param String refill
+    */
+  public function addCategory($category_name,$describtion){
+    $role_needed = $this->settings['magazine_minimumRoleAddCategory'];
+    if($this->compareRole($role_needed)){
+      echo "<br>add category<br>".$category_name.$describtion."<br>";
+
+      $this->db_return['action'] = "add";
+      $this->db_return['add'] = 'INSERT INTO `categories_products`(`ID`, `category`, `describtion`) VALUES (NULL,\''.$category_name.'\',\''.$describtion.'\')';
+    } else {
+      $this->permissionInsufficient();
+    }
+  }
+
+  /**
+    * function deletes a product
+    * @param int productId
+    */
+  public function removeCategory($categoryId){
+    $role_needed = $this->settings['magazine_minimumRoleDeleteCategory'];
+    if($this->compareRole($role_needed)){
+      echo "delete category".$categoryId;
+      $this->db_return['action'] = "delete";
+      $this->db_return['delete'] = 'DELETE FROM `categories_products` WHERE `ID` = '.$categoryId;
+    } else {
+      $this->permissionInsufficient();
+    }
+  } // end removeCategory
+
+  /**
+    * function edits a category
+    * @param int productId
+    * @param String product_name
+    * @param String category
+    * @param String amount
+    * @param String price
+    * @param String refill
+    */
+  // public function editUser($productId,$product_name,$category,$amount,$price,$refill){
+  public function editCategory($categoryId,$parameters){
+    $role_needed = $this->settings['magazine_minimumRoleEditCategory'];
+    if($this->compareRole($role_needed)){
+
+      $query = $this->createEditQuery('categories_products',$parameters);
+
+      $query = $query.' WHERE `ID` = '.$categoryId;
+
+      $this->db_return['action'] = "edit";
+      $this->db_return['edit'] = $query;
+      // var_dump($query);
+    } else {
+      $this->permissionInsufficient();
+    }
+  } // end editCategory
 
   /**
     * function displays all products
